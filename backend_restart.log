@@ -1,7 +1,0 @@
-INFO:     Will watch for changes in these directories: ['D:\\Lucas\\FACULDADE EXAME\\3º Semestre\\Projeto Integrador\\projeto']
-INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
-INFO:     Started reloader process [33536] using WatchFiles
-INFO:     Started server process [32724]
-INFO:     Waiting for application startup.
-INFO:     Application startup complete.
-WARNING:  WatchFiles detected changes in 'backend\pizzaria_api_pkg\init_db.py'. Reloading...

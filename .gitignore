@@ -1,4 +1,149 @@
-/node_modules
-/dist
-/.angular
-/.vscode
+#############################################
+#                GLOBAL                     #
+#############################################
+
+# Logs
+*.log
+logs/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Sistema operacional
+.DS_Store
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# Editor (VSCode, JetBrains)
+.vscode/
+.idea/
+
+# Arquivos temporários
+*.tmp
+*.temp
+*.swp
+*.swo
+
+# Ambientes virtuais Python
+venv/
+.venv/
+env/
+ENV/
+env.bak/
+
+#############################################
+#                 PYTHON                    #
+#############################################
+
+# Cache do Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Distribuições e builds
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+parts/
+sdist/
+wheels/
+pip-wheel-metadata/
+share/python-wheels/
+
+# Banco SQLite comum em dev
+*.db
+*.sqlite3
+*.sqlite
+
+# Virtualenv + Poetry
+.poetry/
+*.venv
+
+# Pydantic cache
+.pydantic/
+
+# Arquivos de ambiente
+.env
+.env.*
+
+#############################################
+#                FASTAPI                    #
+#############################################
+
+# Uvicorn reload files
+*.pid
+
+#############################################
+#                 ANGULAR                   #
+#############################################
+
+# Dependências
+node_modules/
+
+# Builds
+dist/
+build/
+
+# Angular cache
+.angular/
+.angular/cache/
+
+# Configs locais
+/.vscode/
+
+# Ambiente
+*.local
+
+#############################################
+#            FRONTEND OUTROS                #
+#############################################
+
+# Compiled source #
+###################
+*.com
+*.class
+*.dll
+*.exe
+*.o
+*.so
+
+# Package managers
+npm-debug.log
+yarn-error.log
+pnpm-debug.log
+
+#############################################
+#            BACKEND OUTROS                 #
+#############################################
+
+# Caches e metadados
+*.egg-info/
+.eggs/
+
+# PyInstaller
+*.manifest
+*.spec
+
+# Jupyter (se existir)
+.ipynb_checkpoints/
+
+#############################################
+#                  GIT                      #
+#############################################
+
+# Arquivos do Git
+.gitignore~
+*.orig
+
+#############################################
+#           PERSONALIZAÇÕES                 #
+#############################################
+
+# Ignore sua pasta de ambiente local
+.envrc
