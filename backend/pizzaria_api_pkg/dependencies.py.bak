@@ -1,0 +1,41 @@
+from fastapi import Depends, HTTPException, status
+from fastapi.security import OAuth2PasswordBearer
+from jose import JWTError, jwt
+from sqlalchemy.orm import Session
+from pizzaria_api_pkg.database import get_db
+from pizzaria_api_pkg.models import Usuario
+
+# ⚙️ Configurações do JWT (mesmas do jwt_handler.py)
+from os import getenv
+SECRET_KEY = getenv("SECRET_KEY", "defaultsecret")
+ALGORITHM = "HS256"
+
+# 🔐 Esquema de autenticação
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/usuarios/login")
+
+# 🔐 Recupera o usuário logado via token
+def get_usuario_logado(token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)) -> Usuario:
+    try:
+        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        usuario_id: int = int(payload.get("sub"))
+        if usuario_id is None:
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Token inválido",
+                headers={"WWW-Authenticate": "Bearer"},
+            )
+    except JWTError:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Token inválido ou expirado",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+
+    usuario = db.query(Usuario).filter(Usuario.id == usuario_id).first()
+    if not usuario:
+        raise HTTPException(status_code=404, detail="Usuário não encontrado")
+    return {
+        'usuario_id': usuario.id,
+        'tipo_usuario': usuario.tipo_usuario,
+        'email': usuario.email
+    }

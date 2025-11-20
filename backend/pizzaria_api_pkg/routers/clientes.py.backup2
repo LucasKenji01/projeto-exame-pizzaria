@@ -1,0 +1,201 @@
+from pizzaria_api_pkg.services.clientes_service import relatorio_pedidos_cliente
+from fastapi import APIRouter, Depends, HTTPException
+from sqlalchemy.orm import Session
+from pydantic import BaseModel
+from typing import Optional, List
+from pizzaria_api_pkg.services.cliente_update_service import atualizar_dados_cliente
+from pizzaria_api_pkg.schemas.cliente_update import ClienteUpdate, ClienteResponse as ClienteUpdateResponse
+from pizzaria_api_pkg.schemas.clientes import *
+from pizzaria_api_pkg.auth.rbac import role_required, get_usuario_autenticado
+from pizzaria_api_pkg.database import get_db
+from pizzaria_api_pkg.core_models import (
+    Cliente as ClienteModel,
+    PizzaPersonalizada,
+    PizzaIngrediente,
+    Ingrediente,
+    Carrinho,
+    Pedido,
+    ItemPedido
+)
+
+router = APIRouter(prefix="/clientes", tags=["Clientes"])
+
+class ClienteMeResponse(BaseModel):
+    id: int
+    nome: str
+    email: str
+    telefone: Optional[str]
+    endereco: Optional[str]
+    model_config = {"from_attributes": True}
+
+@router.get("/me", response_model=ClienteMeResponse)
+def get_cliente_logado(
+    usuario=Depends(get_usuario_autenticado),
+    db: Session = Depends(get_db)
+):
+    cliente = db.query(ClienteModel).filter(ClienteModel.usuario_id == usuario["usuario_id"]).first()
+    if not cliente or not cliente.usuario:
+        raise HTTPException(status_code=404, detail="Cliente não encontrado")
+
+    return ClienteMeResponse(
+        id=cliente.usuario.id,
+        nome=cliente.usuario.nome,
+        email=cliente.usuario.email,
+        telefone=cliente.telefone,
+        endereco=cliente.endereco
+    )
+
+@router.get("/me/pizzas")
+def listar_pizzas_cliente(
+    usuario=Depends(role_required("cliente")),
+    db: Session = Depends(get_db)
+):
+    cliente = db.query(ClienteModel).filter(ClienteModel.usuario_id == usuario["usuario_id"]).first()
+    if not cliente:
+        raise HTTPException(status_code=404, detail="Cliente não encontrado")
+    
+    pizzas = db.query(PizzaPersonalizada).filter_by(cliente_id=cliente.id).all()
+    return [
+        {
+            "id": pizza.id,
+            "nome": pizza.nome,
+            "preco_base": pizza.preco_base,
+            "ingredientes": [
+                {"id": ing.ingrediente.id, "nome": ing.ingrediente.nome}
+                for ing in pizza.ingredientes
+            ]
+        }
+        for pizza in pizzas
+    ]
+
+class PizzaInput(BaseModel):
+    nome: str
+    preco_base: float
+    ingredientes_ids: List[int]
+
+@router.post("/pizzas/criar")
+def criar_pizza_personalizada(
+    dados: PizzaInput,
+    usuario=Depends(role_required("cliente")),
+    db: Session = Depends(get_db)
+):
+    """✅ CORRIGIDO: Criar pizza personalizada com validação completa"""
+    cliente = db.query(ClienteModel).filter(ClienteModel.usuario_id == usuario["usuario_id"]).first()
+    if not cliente:
+        raise HTTPException(status_code=404, detail="Cliente não encontrado")
+    
+    # Validar ingredientes antes de criar
+    if not dados.ingredientes_ids:
+        raise HTTPException(status_code=400, detail="Pelo menos um ingrediente deve ser informado")
+    
+    # Verificar se todos os ingredientes existem
+    for ingrediente_id in dados.ingredientes_ids:
+        ingrediente = db.query(Ingrediente).filter_by(id=ingrediente_id, disponivel=True).first()
+        if not ingrediente:
+            raise HTTPException(404, f"Ingrediente {ingrediente_id} não encontrado ou indisponível")
+    
+    nova_pizza = PizzaPersonalizada(
+        nome=dados.nome,
+        preco_base=dados.preco_base,
+        cliente_id=cliente.id
+    )
+    db.add(nova_pizza)
+    db.flush()
+    
+    preco_total = dados.preco_base
+    for ingrediente_id in dados.ingredientes_ids:
+        ingrediente = db.query(Ingrediente).filter_by(id=ingrediente_id).first()
+        preco_total += ingrediente.preco
+        
+        db.add(PizzaIngrediente(
+            pizza_personalizada_id=nova_pizza.id,
+            ingrediente_id=ingrediente_id,
+            quantidade=1
+        ))
+    
+    # Atualizar preço total da pizza
+    nova_pizza.preco_base = preco_total
+    
+    db.commit()
+    db.refresh(nova_pizza)
+    return {"msg": "Pizza personalizada criada", "pizza_id": nova_pizza.id, "pizza": {
+        "id": nova_pizza.id,
+        "nome": nova_pizza.nome,
+        "preco_base": nova_pizza.preco_base
+    }}
+
+class CarrinhoInput(BaseModel):
+    pizza_id: int
+    quantidade: int
+
+@router.post("/carrinho/adicionar")
+def adicionar_pizza_ao_carrinho(
+    dados: CarrinhoInput,
+    usuario=Depends(role_required("cliente")),
+    db: Session = Depends(get_db)
+):
+    cliente = db.query(ClienteModel).filter(ClienteModel.usuario_id == usuario["usuario_id"]).first()
+    if not cliente:
+        raise HTTPException(status_code=404, detail="Cliente não encontrado")
+    
+    db.add(Carrinho(
+        produto_personalizado_id=dados.pizza_id,
+        quantidade=dados.quantidade,
+        cliente_id=cliente.id
+    ))
+    db.commit()
+    return {"msg": "Pizza adicionada ao carrinho"}
+
+class ClienteInput(BaseModel):
+    nome: str
+    telefone: Optional[str]
+    endereco: Optional[str]
+
+@router.post("/", response_model=ClienteMeResponse)
+def criar_cliente(
+    dados: ClienteInput,
+    usuario=Depends(get_usuario_autenticado),
+    db: Session = Depends(get_db)
+):
+    cliente_existente = db.query(ClienteModel).filter_by(usuario_id=usuario["usuario_id"]).first()
+    if cliente_existente:
+        raise HTTPException(status_code=400, detail="Cliente já cadastrado")
+
+    novo_cliente = ClienteModel(
+        nome=dados.nome,
+        telefone=dados.telefone,
+        endereco=dados.endereco,
+        usuario_id=usuario["usuario_id"]
+    )
+    db.add(novo_cliente)
+    db.commit()
+    db.refresh(novo_cliente)
+
+    return ClienteMeResponse(
+        id=novo_cliente.usuario.id,
+        nome=novo_cliente.usuario.nome,
+        email=novo_cliente.usuario.email,
+        telefone=novo_cliente.telefone,
+        endereco=novo_cliente.endereco
+    )
+
+@router.put("/me", response_model=ClienteUpdateResponse)
+def atualizar_cliente(
+    dados: ClienteUpdate,
+    db: Session = Depends(get_db),
+    usuario=Depends(get_usuario_autenticado)
+):
+    cliente = atualizar_dados_cliente(
+        db, 
+        usuario["usuario_id"], 
+        dados.telefone, 
+        dados.endereco
+    )
+    
+    return ClienteUpdateResponse(
+        id=cliente.usuario.id,
+        nome=cliente.usuario.nome,
+        email=cliente.usuario.email,
+        telefone=cliente.telefone,
+        endereco=cliente.endereco
+    )

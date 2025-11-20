@@ -1,0 +1,63 @@
+<tui-drawer *tuiPopup="open()">
+  <header>
+    <h2 tuiHeader class="cart-header">
+      <div tuiTitle>
+        <span>
+          Seu pedido
+        </span>
+      </div>
+
+      <div tuiAccessories>
+        <button appearance="icon" iconStart="@tui.x" tuiIconButton type="button" (click)="open.set(false)">
+          Close
+        </button>
+      </div>
+    </h2>
+  </header>
+  <main>
+    <ng-container *ngIf="cartItems.length == 0; else cartWithItems">
+      <p class="cart-empty-message">Seu carrinho está vazio.</p>
+    </ng-container>
+
+    <ng-template #cartWithItems>
+      <div class="itens">
+        <div *ngFor="let item of cartItems" class="cart-item">
+          <div class="item-details">
+            <p>{{ item.quantity }}x {{ item.name }}</p>
+            <p>{{ item.price * item.quantity | currency:'BRL' }}</p>
+          </div>
+          <div class="item-actions">
+            <button tuiButton type="button" size="s" appearance="primary" class="botao-mais" (click)="incrementItem(item)">
+              <tui-icon icon="@tui.plus"></tui-icon>
+            </button>
+            <button tuiButton type="button" size="s" appearance="outline" class="botao-menos" (click)="decrementItem(item)">
+              <tui-icon icon="@tui.minus"></tui-icon>
+            </button>
+          </div>
+        </div>
+
+        <div class="prices">
+          <div class="subtotal-deliveryfee">
+            <div class="line-price">
+              <p>Subtotal:</p>
+              <p>{{ subtotal() | currency: 'BRL' }}</p>
+            </div>
+            <div class="line-price">
+              <p>Taxa de entrega:</p>
+              <p>{{ deliveryFee | currency: 'BRL' }}</p>
+            </div>
+          </div>
+          <div class="line-price total">
+            <p>Total:</p>
+            <p>{{ total() | currency: 'BRL' }}</p>
+          </div>
+        </div>
+      </div>
+    </ng-template>
+  </main>
+  <footer *ngIf="cartItems.length > 0">
+    <button tuiButton appearance="primary" size="m" class="checkout-button" (click)="finalizarPedido()" [disabled]="isLoading">
+      {{ isLoading ? 'Processando...' : 'Finalizar Pedido' }}
+    </button>
+  </footer>
+</tui-drawer>

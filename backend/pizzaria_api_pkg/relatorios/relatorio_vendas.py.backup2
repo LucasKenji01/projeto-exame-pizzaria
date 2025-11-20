@@ -1,0 +1,72 @@
+from sqlalchemy.orm import Session
+from sqlalchemy import func, extract
+from pizzaria_api_pkg.models import Pedido, ItemPedido, Produto
+from datetime import datetime, timedelta
+
+def vendas_por_periodo(db: Session, periodo: str):
+    """✅ CORRIGIDO: Gera relatório de vendas por período"""
+    
+    # Mapear período para format string do PostgreSQL
+    trunc_map = {
+        "diario": "day",
+        "semanal": "week",
+        "mensal": "month",
+        "anual": "year"
+    }
+    
+    trunc = trunc_map.get(periodo, "month")
+    
+    # Query corrigida com LEFT JOIN para incluir todos os produtos
+    query = db.query(
+        Produto.nome.label("pizza"),
+        func.date_trunc(trunc, Pedido.data_pedido).label("periodo"),
+        func.coalesce(func.sum(ItemPedido.quantidade), 0).label("quantidade")
+    ).select_from(Produto)\
+     .outerjoin(ItemPedido, ItemPedido.produto_id == Produto.id)\
+     .outerjoin(Pedido, ItemPedido.pedido_id == Pedido.id)\
+     .filter(Produto.ativo == True)\
+     .group_by(Produto.nome, func.date_trunc(trunc, Pedido.data_pedido))\
+     .order_by(func.date_trunc(trunc, Pedido.data_pedido).desc())\
+     .all()
+    
+    # Processar resultados
+    resultados = []
+    for item in query:
+        if item.periodo:  # Apenas incluir se houver data
+            resultados.append({
+                "pizza": item.pizza,
+                "periodo": item.periodo.strftime("%Y-%m-%d"),
+                "quantidade": int(item.quantidade)
+            })
+    
+    return resultados
+
+
+def vendas_detalhadas(db: Session, data_inicio: datetime = None, data_fim: datetime = None):
+    """Retorna vendas detalhadas em um período"""
+    
+    if not data_inicio:
+        data_inicio = datetime.now() - timedelta(days=30)
+    if not data_fim:
+        data_fim = datetime.now()
+    
+    query = db.query(
+        Produto.nome,
+        func.sum(ItemPedido.quantidade).label("total_vendido"),
+        func.sum(ItemPedido.preco_total).label("faturamento")
+    ).select_from(ItemPedido)\
+     .join(Pedido, ItemPedido.pedido_id == Pedido.id)\
+     .join(Produto, ItemPedido.produto_id == Produto.id)\
+     .filter(Pedido.data_pedido.between(data_inicio, data_fim))\
+     .group_by(Produto.nome)\
+     .order_by(func.sum(ItemPedido.quantidade).desc())\
+     .all()
+    
+    return [
+        {
+            "nome": item.nome,
+            "quantidade": int(item.total_vendido),
+            "faturamento": float(item.faturamento)
+        }
+        for item in query
+    ]

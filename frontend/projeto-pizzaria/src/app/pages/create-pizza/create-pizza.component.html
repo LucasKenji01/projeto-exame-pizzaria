@@ -1,0 +1,66 @@
+<tui-drawer *tuiPopup="openCreatePizza()" direction="left" class="drawer" [overlay]="true">
+  <header>
+    <h1 tuiHeader class="cart-header">
+      <div tuiTitle>
+        <span>
+          Crie sua Pizza
+        </span>
+      </div>
+
+      <div tuiAccessories>
+        <button appearance="icon" iconStart="@tui.x" tuiIconButton type="button" (click)="openCreatePizza.set(false)">
+          Close
+        </button>
+      </div>
+    </h1>
+  </header>
+
+  <main>
+    <div class="main-container">
+      <div class="container-nome">
+        <h2>1. Escolha um nome para sua pizza:</h2>
+        <tui-textfield>
+          <input placeholder="Nome da pizza" tuiTextfield name="pizza" type="text" [(ngModel)]="pizzaName" />
+        </tui-textfield>
+      </div>
+
+      <div class="container-ingredients">
+        <h2>2. Escolha os ingredientes:</h2>
+
+        <div tuiItemGroup [horizontal]="true" class="ingredients">
+          <label *ngFor="let ingredient of ingredients; let i = index" tuiChip [appearance]="checked[i] ? 'accent' : 'neutral'">
+            {{ ingredient }}
+            <input appearance="" tuiChip type="checkbox" [(ngModel)]="checked[i]" (ngModelChange)="gatherSelectedIngredients()" />
+          </label>
+        </div>
+      </div>
+
+      <div class="container-details">
+        <h2>3. Confirme os detalhes da sua pizza:</h2>
+        <div class="pizza-name">
+          <h3>Nome da pizza: </h3>
+          <p *ngIf="!pizzaName">Escolha um nome para sua pizza*</p>
+          <p class="pizza-name-preview">{{ pizzaName }}</p>
+        </div>
+
+        <div class="selected-ingredients">
+          <h3>Ingredientes selecionados:</h3>
+          <p *ngIf="selectedIngredients.length < 2" class="minimo-ingredientes">Escolha pelo menos 2 ingredientes*</p>
+          <tui-badge
+            appearance="positive"
+            size="m"
+            *ngFor="let ingredient of selectedIngredients"
+          >
+            {{ ingredient }}
+          </tui-badge>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <button tuiButton appearance="primary" size="m" class="button-create-pizza" [disabled]="!isFormValid()" (click)="createPizza()">
+      Criar pizza
+    </button>
+  </footer>
+</tui-drawer>

@@ -1,0 +1,38 @@
+from pydantic import BaseModel
+from datetime import datetime
+from typing import List
+
+class ItemPedidoCreate(BaseModel):
+    produto_id: int | None = None
+    produto_personalizado_id: int | None = None
+    quantidade: int
+
+class ItemPedidoOut(BaseModel):
+    id: int
+    produto_id: int | None
+    produto_personalizado_id: int | None
+    quantidade: int
+    preco_unitario: float
+    preco_total: float
+
+    class Config:
+        from_attributes = True
+
+class PedidoCreate(BaseModel):
+    descricao: str | None = None
+    email: str
+    itens: List[ItemPedidoCreate] | None = None
+
+class PedidoOut(BaseModel):
+    id: int
+    descricao: str
+    quantidade: int
+    valor_total: float
+    email: str
+    data_pedido: datetime
+    status: str
+    cliente_id: int
+    itens: List[ItemPedidoOut] = []
+
+    class Config:
+        from_attributes = True

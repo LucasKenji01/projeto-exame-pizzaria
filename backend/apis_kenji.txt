@@ -1,0 +1,3875 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Pizzaria API",
+    "description": "API para gerenciamento de pedidos, clientes e produtos da pizzaria.",
+    "version": "2.0"
+  },
+  "paths": {
+    "/usuarios/cadastro_completo": {
+      "post": {
+        "tags": [
+          "Usuários",
+          "Usuários"
+        ],
+        "summary": "Cadastro Completo",
+        "description": "Cadastro completo de cliente com usuário",
+        "operationId": "cadastro_completo_usuarios_cadastro_completo_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ClienteCreate"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ClienteResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/usuarios/login": {
+      "post": {
+        "tags": [
+          "Usuários",
+          "Usuários"
+        ],
+        "summary": "Login",
+        "description": "Login de usuário",
+        "operationId": "login_usuarios_login_post",
+        "requestBody": {
+          "content": {
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "$ref": "#/components/schemas/Body_login_usuarios_login_post"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TokenResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/usuarios/me": {
+      "get": {
+        "tags": [
+          "Usuários",
+          "Usuários"
+        ],
+        "summary": "Get Usuario Atual",
+        "description": "Retorna dados do usuário atual",
+        "operationId": "get_usuario_atual_usuarios_me_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ]
+      }
+    },
+    "/clientes/me": {
+      "get": {
+        "tags": [
+          "Clientes",
+          "Clientes"
+        ],
+        "summary": "Get Cliente Logado",
+        "operationId": "get_cliente_logado_clientes_me_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ClienteMeResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ]
+      },
+      "put": {
+        "tags": [
+          "Clientes",
+          "Clientes"
+        ],
+        "summary": "Atualizar Cliente",
+        "operationId": "atualizar_cliente_clientes_me_put",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ClienteUpdate"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ClienteResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ]
+      }
+    },
+    "/clientes/me/pizzas": {
+      "get": {
+        "tags": [
+          "Clientes",
+          "Clientes"
+        ],
+        "summary": "Listar Pizzas Cliente",
+        "operationId": "listar_pizzas_cliente_clientes_me_pizzas_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ]
+      }
+    },
+    "/clientes/pizzas/criar": {
+      "post": {
+        "tags": [
+          "Clientes",
+          "Clientes"
+        ],
+        "summary": "Criar Pizza Personalizada",
+        "description": "✅ CORRIGIDO: Criar pizza personalizada com validação completa",
+        "operationId": "criar_pizza_personalizada_clientes_pizzas_criar_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PizzaInput"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ]
+      }
+    },
+    "/clientes/carrinho/adicionar": {
+      "post": {
+        "tags": [
+          "Clientes",
+          "Clientes"
+        ],
+        "summary": "Adicionar Pizza Ao Carrinho",
+        "description": "✅ CORRIGIDO: Valida propriedade da pizza antes de adicionar",
+        "operationId": "adicionar_pizza_ao_carrinho_clientes_carrinho_adicionar_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CarrinhoInput"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ]
+      }
+    },
+    "/clientes/": {
+      "post": {
+        "tags": [
+          "Clientes",
+          "Clientes"
+        ],
+        "summary": "Criar Cliente",
+        "operationId": "criar_cliente_clientes__post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ClienteInput"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ClienteMeResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ]
+      }
+    },
+    "/pedidos/finalizar": {
+      "post": {
+        "tags": [
+          "Pedidos",
+          "Pedidos"
+        ],
+        "summary": "Finalizar Pedido",
+        "operationId": "finalizar_pedido_pedidos_finalizar_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PedidoCreate"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PedidoOut"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ]
+      }
+    },
+    "/pedidos/gerar-do-carrinho": {
+      "post": {
+        "tags": [
+          "Pedidos",
+          "Pedidos"
+        ],
+        "summary": "Gerar Pedido Automatico",
+        "operationId": "gerar_pedido_automatico_pedidos_gerar_do_carrinho_post",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PedidoOut"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ]
+      }
+    },
+    "/pedidos/me": {
+      "get": {
+        "tags": [
+          "Pedidos",
+          "Pedidos"
+        ],
+        "summary": "Listar Meus Pedidos",
+        "description": "✅ CORRIGIDO: Retorna pedidos com nomes dos produtos",
+        "operationId": "listar_meus_pedidos_pedidos_me_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/PedidoOut"
+                  },
+                  "type": "array",
+                  "title": "Response Listar Meus Pedidos Pedidos Me Get"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ]
+      }
+    },
+    "/pedidos/{pedido_id}": {
+      "delete": {
+        "tags": [
+          "Pedidos",
+          "Pedidos"
+        ],
+        "summary": "Cancelar Pedido",
+        "operationId": "cancelar_pedido_pedidos__pedido_id__delete",
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "pedido_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Pedido Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/pedidos/{pedido_id}/detalhes": {
+      "get": {
+        "tags": [
+          "Pedidos",
+          "Pedidos"
+        ],
+        "summary": "Detalhes Pedido",
+        "description": "✅ CORRIGIDO: Retorna detalhes completos do pedido com nomes corretos",
+        "operationId": "detalhes_pedido_pedidos__pedido_id__detalhes_get",
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "pedido_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Pedido Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/pedidos/{pedido_id}/status": {
+      "put": {
+        "tags": [
+          "Pedidos",
+          "Pedidos"
+        ],
+        "summary": "Atualizar Status",
+        "operationId": "atualizar_status_pedidos__pedido_id__status_put",
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "pedido_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Pedido Id"
+            }
+          },
+          {
+            "name": "novo_status",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Novo Status"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/produtos/": {
+      "get": {
+        "tags": [
+          "Produtos",
+          "Produtos"
+        ],
+        "summary": "Listar Produtos",
+        "operationId": "listar_produtos_produtos__get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/Produto"
+                  },
+                  "type": "array",
+                  "title": "Response Listar Produtos Produtos  Get"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Produtos",
+          "Produtos"
+        ],
+        "summary": "Criar Produto",
+        "operationId": "criar_produto_produtos__post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ProdutoCreate"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Produto"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ]
+      }
+    },
+    "/produtos/pizza_com_tamanhos": {
+      "post": {
+        "tags": [
+          "Produtos",
+          "Produtos"
+        ],
+        "summary": "Cadastrar Pizza Com Tamanhos",
+        "operationId": "cadastrar_pizza_com_tamanhos_produtos_pizza_com_tamanhos_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ProdutoCreate"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Produto"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ]
+      }
+    },
+    "/produtos/excluir/{produto_id}": {
+      "delete": {
+        "tags": [
+          "Produtos",
+          "Produtos"
+        ],
+        "summary": "Excluir Produto",
+        "operationId": "excluir_produto_produtos_excluir__produto_id__delete",
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "produto_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Produto Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true,
+                  "title": "Response Excluir Produto Produtos Excluir  Produto Id  Delete"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/produtos/categoria/{categoria_id}": {
+      "get": {
+        "tags": [
+          "Produtos",
+          "Produtos"
+        ],
+        "summary": "Listar Produtos Por Categoria",
+        "operationId": "listar_produtos_por_categoria_produtos_categoria__categoria_id__get",
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "categoria_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Categoria Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Produto"
+                  },
+                  "title": "Response Listar Produtos Por Categoria Produtos Categoria  Categoria Id  Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/produtos/{produto_id}": {
+      "get": {
+        "tags": [
+          "Produtos",
+          "Produtos"
+        ],
+        "summary": "Buscar Produto Por Id",
+        "operationId": "buscar_produto_por_id_produtos__produto_id__get",
+        "parameters": [
+          {
+            "name": "produto_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Produto Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Produto"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/carrinho/adicionar": {
+      "post": {
+        "tags": [
+          "Carrinho",
+          "Carrinho"
+        ],
+        "summary": "Adicionar Item",
+        "operationId": "adicionar_item_carrinho_adicionar_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CarrinhoItemCreate"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CarrinhoItemOut"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ]
+      }
+    },
+    "/carrinho/": {
+      "get": {
+        "tags": [
+          "Carrinho",
+          "Carrinho"
+        ],
+        "summary": "Listar Carrinho",
+        "operationId": "listar_carrinho_carrinho__get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/CarrinhoItemOut"
+                  },
+                  "type": "array",
+                  "title": "Response Listar Carrinho Carrinho  Get"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ]
+      }
+    },
+    "/carrinho/detalhado": {
+      "get": {
+        "tags": [
+          "Carrinho",
+          "Carrinho"
+        ],
+        "summary": "Listar Carrinho Detalhado",
+        "description": "✅ NOVO: Retorna carrinho com detalhes completos dos produtos",
+        "operationId": "listar_carrinho_detalhado_carrinho_detalhado_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ]
+      }
+    },
+    "/carrinho/limpar": {
+      "delete": {
+        "tags": [
+          "Carrinho",
+          "Carrinho"
+        ],
+        "summary": "Limpar Carrinho",
+        "operationId": "limpar_carrinho_carrinho_limpar_delete",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ]
+      }
+    },
+    "/carrinho/finalizar": {
+      "post": {
+        "tags": [
+          "Carrinho",
+          "Carrinho"
+        ],
+        "summary": "Finalizar Carrinho",
+        "operationId": "finalizar_carrinho_carrinho_finalizar_post",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PedidoOut"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ]
+      }
+    },
+    "/carrinho/adicionar-pizza-personalizada": {
+      "post": {
+        "tags": [
+          "Carrinho",
+          "Carrinho"
+        ],
+        "summary": "Adicionar Pizza Personalizada",
+        "description": "✅ CORRIGIDO: Adicionar pizza personalizada ao carrinho",
+        "operationId": "adicionar_pizza_personalizada_carrinho_adicionar_pizza_personalizada_post",
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "pizza_id",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Pizza Id"
+            }
+          },
+          {
+            "name": "quantidade",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 1,
+              "title": "Quantidade"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CarrinhoItemOut"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/carrinho/aplicar-cupom": {
+      "post": {
+        "tags": [
+          "Carrinho",
+          "Carrinho"
+        ],
+        "summary": "Aplicar Cupom",
+        "operationId": "aplicar_cupom_carrinho_aplicar_cupom_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AplicarCupomRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AplicarCupomResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ]
+      }
+    },
+    "/entregas/funcionario": {
+      "get": {
+        "tags": [
+          "Entregas",
+          "Entregas"
+        ],
+        "summary": "Entregas Funcionario",
+        "operationId": "entregas_funcionario_entregas_funcionario_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/EntregaOut"
+                  },
+                  "type": "array",
+                  "title": "Response Entregas Funcionario Entregas Funcionario Get"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ]
+      }
+    },
+    "/entregas/pedido/{pedido_id}": {
+      "get": {
+        "tags": [
+          "Entregas",
+          "Entregas"
+        ],
+        "summary": "Consultar Entrega Pedido",
+        "operationId": "consultar_entrega_pedido_entregas_pedido__pedido_id__get",
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "pedido_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Pedido Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EntregaOut"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/cupons/": {
+      "get": {
+        "tags": [
+          "Cupons",
+          "Cupons"
+        ],
+        "summary": "Listar Cupons",
+        "operationId": "listar_cupons_cupons__get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/CupomOut"
+                  },
+                  "type": "array",
+                  "title": "Response Listar Cupons Cupons  Get"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Cupons",
+          "Cupons"
+        ],
+        "summary": "Criar Cupom",
+        "operationId": "criar_cupom_cupons__post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CupomCreate"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CupomOut"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/cupons/{cupom_id}": {
+      "get": {
+        "tags": [
+          "Cupons",
+          "Cupons"
+        ],
+        "summary": "Obter Cupom",
+        "operationId": "obter_cupom_cupons__cupom_id__get",
+        "parameters": [
+          {
+            "name": "cupom_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Cupom Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CupomOut"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Cupons",
+          "Cupons"
+        ],
+        "summary": "Deletar Cupom",
+        "operationId": "deletar_cupom_cupons__cupom_id__delete",
+        "parameters": [
+          {
+            "name": "cupom_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Cupom Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/ingredientes/": {
+      "get": {
+        "tags": [
+          "Ingredientes",
+          "Ingredientes"
+        ],
+        "summary": "Listar Ingredientes",
+        "operationId": "listar_ingredientes_ingredientes__get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/Ingrediente"
+                  },
+                  "type": "array",
+                  "title": "Response Listar Ingredientes Ingredientes  Get"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Ingredientes",
+          "Ingredientes"
+        ],
+        "summary": "Criar Ingrediente",
+        "operationId": "criar_ingrediente_ingredientes__post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/IngredienteCreate"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Ingrediente"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ]
+      }
+    },
+    "/ingredientes/excluir/{ingrediente_id}": {
+      "delete": {
+        "tags": [
+          "Ingredientes",
+          "Ingredientes"
+        ],
+        "summary": "Excluir Ingrediente",
+        "operationId": "excluir_ingrediente_ingredientes_excluir__ingrediente_id__delete",
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "ingrediente_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Ingrediente Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true,
+                  "title": "Response Excluir Ingrediente Ingredientes Excluir  Ingrediente Id  Delete"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/pizzas/": {
+      "get": {
+        "tags": [
+          "Pizza Personalizada",
+          "Pizzas Personalizadas"
+        ],
+        "summary": "Listar Pizzas Personalizadas",
+        "operationId": "listar_pizzas_personalizadas_pizzas__get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Pizza Personalizada",
+          "Pizzas Personalizadas"
+        ],
+        "summary": "Criar Pizza",
+        "operationId": "criar_pizza_pizzas__post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PizzaCreate"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PizzaOut"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ]
+      }
+    },
+    "/pizzas/montar": {
+      "post": {
+        "tags": [
+          "Pizza Personalizada",
+          "Pizzas Personalizadas"
+        ],
+        "summary": "Montar Pizza",
+        "operationId": "montar_pizza_pizzas_montar_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PizzaMontagem"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PizzaOut"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ]
+      }
+    },
+    "/pizzas/me": {
+      "get": {
+        "tags": [
+          "Pizza Personalizada",
+          "Pizzas Personalizadas"
+        ],
+        "summary": "Listar Minhas Pizzas",
+        "operationId": "listar_minhas_pizzas_pizzas_me_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/PizzaOut"
+                  },
+                  "type": "array",
+                  "title": "Response Listar Minhas Pizzas Pizzas Me Get"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ]
+      }
+    },
+    "/pizzas/{pizza_id}/preco": {
+      "get": {
+        "tags": [
+          "Pizza Personalizada",
+          "Pizzas Personalizadas"
+        ],
+        "summary": "Calcular Preco",
+        "operationId": "calcular_preco_pizzas__pizza_id__preco_get",
+        "parameters": [
+          {
+            "name": "pizza_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Pizza Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/pagamentos/": {
+      "post": {
+        "tags": [
+          "Pagamentos",
+          "Pagamentos"
+        ],
+        "summary": "Registrar Pagamento",
+        "operationId": "registrar_pagamento_pagamentos__post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PagamentoCreate"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PagamentoOut"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ]
+      }
+    },
+    "/favoritos/": {
+      "get": {
+        "tags": [
+          "Favoritos",
+          "Favoritos"
+        ],
+        "summary": "Listar",
+        "operationId": "listar_favoritos__get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/FavoritoOut"
+                  },
+                  "type": "array",
+                  "title": "Response Listar Favoritos  Get"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ]
+      },
+      "post": {
+        "tags": [
+          "Favoritos",
+          "Favoritos"
+        ],
+        "summary": "Adicionar",
+        "operationId": "adicionar_favoritos__post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/FavoritoCreate"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FavoritoOut"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ]
+      }
+    },
+    "/enderecos/": {
+      "get": {
+        "tags": [
+          "Endereços",
+          "Endereços"
+        ],
+        "summary": "Listar",
+        "operationId": "listar_enderecos__get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/EnderecoOut"
+                  },
+                  "type": "array",
+                  "title": "Response Listar Enderecos  Get"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ]
+      },
+      "post": {
+        "tags": [
+          "Endereços",
+          "Endereços"
+        ],
+        "summary": "Adicionar",
+        "operationId": "adicionar_enderecos__post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EnderecoCreate"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EnderecoOut"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ]
+      }
+    },
+    "/relatorios/vendas": {
+      "get": {
+        "tags": [
+          "Relatórios",
+          "Relatórios"
+        ],
+        "summary": "Vendas",
+        "operationId": "vendas_relatorios_vendas_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/relatorios/nuvem-sabores-lista-json": {
+      "get": {
+        "tags": [
+          "Relatórios",
+          "Relatórios"
+        ],
+        "summary": "Nuvem Sabores",
+        "operationId": "nuvem_sabores_relatorios_nuvem_sabores_lista_json_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/relatorios/pizzas-mais-vendidas/{periodo}": {
+      "get": {
+        "tags": [
+          "Relatórios Vendas"
+        ],
+        "summary": "Relatorio Vendas",
+        "description": "✅ CORRIGIDO: Trata retorno corretamente",
+        "operationId": "relatorio_vendas_relatorios_pizzas_mais_vendidas__periodo__get",
+        "parameters": [
+          {
+            "name": "periodo",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Periodo"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/relatorios/nuvem-sabores-json": {
+      "get": {
+        "tags": [
+          "Nuvem Sabores",
+          "Relatórios"
+        ],
+        "summary": "Nuvem Sabores Json",
+        "operationId": "nuvem_sabores_json_relatorios_nuvem_sabores_json_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/admin/limpar/{tabela}": {
+      "delete": {
+        "tags": [
+          "Admin",
+          "Admin"
+        ],
+        "summary": "Limpar Tabela",
+        "operationId": "limpar_tabela_admin_limpar__tabela__delete",
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "tabela",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Tabela"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/admin/produtos/criar": {
+      "post": {
+        "tags": [
+          "Admin",
+          "Admin"
+        ],
+        "summary": "Criar Produto",
+        "operationId": "criar_produto_admin_produtos_criar_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ProdutoInput"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ]
+      }
+    },
+    "/admin/ingredientes/criar": {
+      "post": {
+        "tags": [
+          "Admin",
+          "Admin"
+        ],
+        "summary": "Criar Ingrediente",
+        "operationId": "criar_ingrediente_admin_ingredientes_criar_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/pizzaria_api_pkg__routers__admin__IngredienteInput"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ]
+      }
+    },
+    "/admin/cupons/criar": {
+      "post": {
+        "tags": [
+          "Admin",
+          "Admin"
+        ],
+        "summary": "Criar Cupom",
+        "operationId": "criar_cupom_admin_cupons_criar_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CupomInput"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ]
+      }
+    },
+    "/admin/metricas": {
+      "get": {
+        "tags": [
+          "Admin",
+          "Admin"
+        ],
+        "summary": "Metricas",
+        "operationId": "metricas_admin_metricas_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MetricasOut"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ]
+      }
+    },
+    "/relatorios/nuvem-avaliadores-json": {
+      "get": {
+        "tags": [
+          "Nuvem Avaliadores",
+          "Relatórios"
+        ],
+        "summary": "Nuvem Avaliadores Json",
+        "operationId": "nuvem_avaliadores_json_relatorios_nuvem_avaliadores_json_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/avaliacoes/detalhes": {
+      "get": {
+        "tags": [
+          "Avaliações Detalhes",
+          "Avaliações"
+        ],
+        "summary": "Detalhes Avaliador",
+        "operationId": "detalhes_avaliador_avaliacoes_detalhes_get",
+        "parameters": [
+          {
+            "name": "autor",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Autor"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/avaliacoes/media": {
+      "get": {
+        "tags": [
+          "Avaliações Relatórios",
+          "Relatórios de Avaliações"
+        ],
+        "summary": "Media Avaliacoes",
+        "operationId": "media_avaliacoes_avaliacoes_media_get",
+        "parameters": [
+          {
+            "name": "cliente_id",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Cliente Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/avaliacoes/estatisticas": {
+      "get": {
+        "tags": [
+          "Avaliações Relatórios",
+          "Relatórios de Avaliações"
+        ],
+        "summary": "Estatisticas Avaliacoes",
+        "operationId": "estatisticas_avaliacoes_avaliacoes_estatisticas_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/avaliacoes/produto/{produto_id}": {
+      "get": {
+        "tags": [
+          "Avaliações Relatórios",
+          "Relatórios de Avaliações"
+        ],
+        "summary": "Avaliacoes Por Produto",
+        "operationId": "avaliacoes_por_produto_avaliacoes_produto__produto_id__get",
+        "parameters": [
+          {
+            "name": "produto_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Produto Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/health": {
+      "get": {
+        "summary": "Health Check",
+        "operationId": "health_check_health_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "AplicarCupomRequest": {
+        "properties": {
+          "cupom_codigo": {
+            "type": "string",
+            "title": "Cupom Codigo"
+          }
+        },
+        "type": "object",
+        "required": [
+          "cupom_codigo"
+        ],
+        "title": "AplicarCupomRequest"
+      },
+      "AplicarCupomResponse": {
+        "properties": {
+          "mensagem": {
+            "type": "string",
+            "title": "Mensagem"
+          },
+          "desconto_aplicado": {
+            "type": "number",
+            "title": "Desconto Aplicado"
+          },
+          "valor_original": {
+            "type": "number",
+            "title": "Valor Original"
+          },
+          "valor_final": {
+            "type": "number",
+            "title": "Valor Final"
+          }
+        },
+        "type": "object",
+        "required": [
+          "mensagem",
+          "desconto_aplicado",
+          "valor_original",
+          "valor_final"
+        ],
+        "title": "AplicarCupomResponse"
+      },
+      "Body_login_usuarios_login_post": {
+        "properties": {
+          "username": {
+            "type": "string",
+            "title": "Username"
+          },
+          "password": {
+            "type": "string",
+            "title": "Password"
+          }
+        },
+        "type": "object",
+        "required": [
+          "username",
+          "password"
+        ],
+        "title": "Body_login_usuarios_login_post"
+      },
+      "CarrinhoInput": {
+        "properties": {
+          "pizza_id": {
+            "type": "integer",
+            "title": "Pizza Id"
+          },
+          "quantidade": {
+            "type": "integer",
+            "title": "Quantidade"
+          }
+        },
+        "type": "object",
+        "required": [
+          "pizza_id",
+          "quantidade"
+        ],
+        "title": "CarrinhoInput"
+      },
+      "CarrinhoItemCreate": {
+        "properties": {
+          "produto_id": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Produto Id"
+          },
+          "produto_personalizado_id": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Produto Personalizado Id"
+          },
+          "quantidade": {
+            "type": "integer",
+            "exclusiveMinimum": 0,
+            "title": "Quantidade",
+            "description": "Quantidade deve ser maior que zero"
+          }
+        },
+        "type": "object",
+        "required": [
+          "quantidade"
+        ],
+        "title": "CarrinhoItemCreate"
+      },
+      "CarrinhoItemOut": {
+        "properties": {
+          "id": {
+            "type": "integer",
+            "title": "Id"
+          },
+          "produto_id": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Produto Id"
+          },
+          "produto_personalizado_id": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Produto Personalizado Id"
+          },
+          "quantidade": {
+            "type": "integer",
+            "title": "Quantidade"
+          },
+          "cliente_id": {
+            "type": "integer",
+            "title": "Cliente Id"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "produto_id",
+          "produto_personalizado_id",
+          "quantidade",
+          "cliente_id"
+        ],
+        "title": "CarrinhoItemOut"
+      },
+      "ClienteCreate": {
+        "properties": {
+          "nome": {
+            "type": "string",
+            "title": "Nome"
+          },
+          "email": {
+            "type": "string",
+            "title": "Email"
+          },
+          "senha": {
+            "type": "string",
+            "title": "Senha"
+          },
+          "telefone": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Telefone"
+          },
+          "endereco": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Endereco"
+          }
+        },
+        "type": "object",
+        "required": [
+          "nome",
+          "email",
+          "senha",
+          "telefone",
+          "endereco"
+        ],
+        "title": "ClienteCreate"
+      },
+      "ClienteInput": {
+        "properties": {
+          "nome": {
+            "type": "string",
+            "title": "Nome"
+          },
+          "telefone": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Telefone"
+          },
+          "endereco": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Endereco"
+          }
+        },
+        "type": "object",
+        "required": [
+          "nome",
+          "telefone",
+          "endereco"
+        ],
+        "title": "ClienteInput"
+      },
+      "ClienteMeResponse": {
+        "properties": {
+          "id": {
+            "type": "integer",
+            "title": "Id"
+          },
+          "nome": {
+            "type": "string",
+            "title": "Nome"
+          },
+          "email": {
+            "type": "string",
+            "title": "Email"
+          },
+          "telefone": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Telefone"
+          },
+          "endereco": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Endereco"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "nome",
+          "email",
+          "telefone",
+          "endereco"
+        ],
+        "title": "ClienteMeResponse"
+      },
+      "ClienteResponse": {
+        "properties": {
+          "id": {
+            "type": "integer",
+            "title": "Id"
+          },
+          "nome": {
+            "type": "string",
+            "title": "Nome"
+          },
+          "email": {
+            "type": "string",
+            "title": "Email"
+          },
+          "telefone": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Telefone"
+          },
+          "endereco": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Endereco"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "nome",
+          "email",
+          "telefone",
+          "endereco"
+        ],
+        "title": "ClienteResponse"
+      },
+      "ClienteUpdate": {
+        "properties": {
+          "telefone": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Telefone"
+          },
+          "endereco": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Endereco"
+          }
+        },
+        "type": "object",
+        "title": "ClienteUpdate"
+      },
+      "CupomCreate": {
+        "properties": {
+          "codigo": {
+            "type": "string",
+            "title": "Codigo",
+            "example": "PROMO10"
+          },
+          "percentual_desconto": {
+            "type": "number",
+            "maximum": 100,
+            "exclusiveMinimum": 0,
+            "title": "Percentual Desconto",
+            "example": 10
+          },
+          "validade": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Validade",
+            "example": "2025-12-31"
+          },
+          "ativo": {
+            "type": "boolean",
+            "title": "Ativo",
+            "default": true
+          }
+        },
+        "type": "object",
+        "required": [
+          "codigo",
+          "percentual_desconto"
+        ],
+        "title": "CupomCreate",
+        "description": "Schema usado para criação de cupons."
+      },
+      "CupomInput": {
+        "properties": {
+          "codigo": {
+            "type": "string",
+            "title": "Codigo"
+          },
+          "percentual_desconto": {
+            "type": "number",
+            "title": "Percentual Desconto"
+          },
+          "validade": {
+            "type": "string",
+            "format": "date",
+            "title": "Validade"
+          }
+        },
+        "type": "object",
+        "required": [
+          "codigo",
+          "percentual_desconto",
+          "validade"
+        ],
+        "title": "CupomInput"
+      },
+      "CupomOut": {
+        "properties": {
+          "codigo": {
+            "type": "string",
+            "title": "Codigo",
+            "example": "PROMO10"
+          },
+          "percentual_desconto": {
+            "type": "number",
+            "maximum": 100,
+            "exclusiveMinimum": 0,
+            "title": "Percentual Desconto",
+            "example": 10
+          },
+          "validade": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Validade",
+            "example": "2025-12-31"
+          },
+          "ativo": {
+            "type": "boolean",
+            "title": "Ativo",
+            "default": true
+          },
+          "id": {
+            "type": "integer",
+            "title": "Id"
+          }
+        },
+        "type": "object",
+        "required": [
+          "codigo",
+          "percentual_desconto",
+          "id"
+        ],
+        "title": "CupomOut",
+        "description": "Schema usado para retorno de dados de cupons."
+      },
+      "EnderecoCreate": {
+        "properties": {
+          "rua": {
+            "type": "string",
+            "title": "Rua"
+          },
+          "numero": {
+            "type": "string",
+            "title": "Numero"
+          },
+          "complemento": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Complemento"
+          },
+          "bairro": {
+            "type": "string",
+            "title": "Bairro"
+          },
+          "cidade": {
+            "type": "string",
+            "title": "Cidade"
+          },
+          "estado": {
+            "type": "string",
+            "title": "Estado"
+          },
+          "cep": {
+            "type": "string",
+            "title": "Cep"
+          },
+          "favorito": {
+            "type": "boolean",
+            "title": "Favorito",
+            "default": false
+          }
+        },
+        "type": "object",
+        "required": [
+          "rua",
+          "numero",
+          "bairro",
+          "cidade",
+          "estado",
+          "cep"
+        ],
+        "title": "EnderecoCreate"
+      },
+      "EnderecoOut": {
+        "properties": {
+          "rua": {
+            "type": "string",
+            "title": "Rua"
+          },
+          "numero": {
+            "type": "string",
+            "title": "Numero"
+          },
+          "complemento": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Complemento"
+          },
+          "bairro": {
+            "type": "string",
+            "title": "Bairro"
+          },
+          "cidade": {
+            "type": "string",
+            "title": "Cidade"
+          },
+          "estado": {
+            "type": "string",
+            "title": "Estado"
+          },
+          "cep": {
+            "type": "string",
+            "title": "Cep"
+          },
+          "favorito": {
+            "type": "boolean",
+            "title": "Favorito",
+            "default": false
+          },
+          "id": {
+            "type": "integer",
+            "title": "Id"
+          }
+        },
+        "type": "object",
+        "required": [
+          "rua",
+          "numero",
+          "bairro",
+          "cidade",
+          "estado",
+          "cep",
+          "id"
+        ],
+        "title": "EnderecoOut"
+      },
+      "EntregaOut": {
+        "properties": {
+          "id": {
+            "type": "integer",
+            "title": "Id"
+          },
+          "endereco_entrega": {
+            "type": "string",
+            "title": "Endereco Entrega"
+          },
+          "data_prevista": {
+            "type": "string",
+            "format": "date",
+            "title": "Data Prevista"
+          },
+          "data_entrega": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Data Entrega"
+          },
+          "status": {
+            "type": "string",
+            "title": "Status"
+          },
+          "pedido_id": {
+            "type": "integer",
+            "title": "Pedido Id"
+          },
+          "funcionario_id": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Funcionario Id"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "endereco_entrega",
+          "data_prevista",
+          "status",
+          "pedido_id"
+        ],
+        "title": "EntregaOut"
+      },
+      "FavoritoCreate": {
+        "properties": {
+          "produto_id": {
+            "type": "integer",
+            "title": "Produto Id"
+          }
+        },
+        "type": "object",
+        "required": [
+          "produto_id"
+        ],
+        "title": "FavoritoCreate"
+      },
+      "FavoritoOut": {
+        "properties": {
+          "id": {
+            "type": "integer",
+            "title": "Id"
+          },
+          "produto_id": {
+            "type": "integer",
+            "title": "Produto Id"
+          },
+          "cliente_id": {
+            "type": "integer",
+            "title": "Cliente Id"
+          },
+          "data_adicao": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Data Adicao"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "produto_id",
+          "cliente_id",
+          "data_adicao"
+        ],
+        "title": "FavoritoOut"
+      },
+      "HTTPValidationError": {
+        "properties": {
+          "detail": {
+            "items": {
+              "$ref": "#/components/schemas/ValidationError"
+            },
+            "type": "array",
+            "title": "Detail"
+          }
+        },
+        "type": "object",
+        "title": "HTTPValidationError"
+      },
+      "Ingrediente": {
+        "properties": {
+          "id": {
+            "type": "integer",
+            "title": "Id"
+          },
+          "nome": {
+            "type": "string",
+            "title": "Nome"
+          },
+          "preco": {
+            "type": "number",
+            "title": "Preco"
+          },
+          "disponivel": {
+            "type": "boolean",
+            "title": "Disponivel"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "nome",
+          "preco",
+          "disponivel"
+        ],
+        "title": "Ingrediente"
+      },
+      "IngredienteCreate": {
+        "properties": {
+          "nome": {
+            "type": "string",
+            "title": "Nome"
+          },
+          "preco": {
+            "type": "number",
+            "title": "Preco",
+            "default": 0
+          }
+        },
+        "type": "object",
+        "required": [
+          "nome"
+        ],
+        "title": "IngredienteCreate"
+      },
+      "ItemPedidoCreate": {
+        "properties": {
+          "produto_id": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Produto Id"
+          },
+          "produto_personalizado_id": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Produto Personalizado Id"
+          },
+          "quantidade": {
+            "type": "integer",
+            "title": "Quantidade"
+          }
+        },
+        "type": "object",
+        "required": [
+          "quantidade"
+        ],
+        "title": "ItemPedidoCreate"
+      },
+      "ItemPedidoOut": {
+        "properties": {
+          "id": {
+            "type": "integer",
+            "title": "Id"
+          },
+          "produto_id": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Produto Id"
+          },
+          "produto_personalizado_id": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Produto Personalizado Id"
+          },
+          "quantidade": {
+            "type": "integer",
+            "title": "Quantidade"
+          },
+          "preco_unitario": {
+            "type": "number",
+            "title": "Preco Unitario"
+          },
+          "preco_total": {
+            "type": "number",
+            "title": "Preco Total"
+          },
+          "nome_produto": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Nome Produto"
+          },
+          "tipo": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Tipo"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "produto_id",
+          "produto_personalizado_id",
+          "quantidade",
+          "preco_unitario",
+          "preco_total"
+        ],
+        "title": "ItemPedidoOut"
+      },
+      "MetricasOut": {
+        "properties": {
+          "total_pedidos": {
+            "type": "integer",
+            "title": "Total Pedidos"
+          },
+          "total_usuarios": {
+            "type": "integer",
+            "title": "Total Usuarios"
+          },
+          "faturamento_total": {
+            "type": "number",
+            "title": "Faturamento Total"
+          }
+        },
+        "type": "object",
+        "required": [
+          "total_pedidos",
+          "total_usuarios",
+          "faturamento_total"
+        ],
+        "title": "MetricasOut"
+      },
+      "PagamentoCreate": {
+        "properties": {
+          "pedido_id": {
+            "type": "integer",
+            "title": "Pedido Id"
+          },
+          "forma_pagamento": {
+            "type": "string",
+            "title": "Forma Pagamento"
+          },
+          "valor": {
+            "type": "number",
+            "title": "Valor"
+          }
+        },
+        "type": "object",
+        "required": [
+          "pedido_id",
+          "forma_pagamento",
+          "valor"
+        ],
+        "title": "PagamentoCreate"
+      },
+      "PagamentoOut": {
+        "properties": {
+          "id": {
+            "type": "integer",
+            "title": "Id"
+          },
+          "pedido_id": {
+            "type": "integer",
+            "title": "Pedido Id"
+          },
+          "forma_pagamento": {
+            "type": "string",
+            "title": "Forma Pagamento"
+          },
+          "valor": {
+            "type": "number",
+            "title": "Valor"
+          },
+          "data_pagamento": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Data Pagamento"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "pedido_id",
+          "forma_pagamento",
+          "valor"
+        ],
+        "title": "PagamentoOut"
+      },
+      "PedidoCreate": {
+        "properties": {
+          "descricao": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Descricao"
+          },
+          "email": {
+            "type": "string",
+            "title": "Email"
+          },
+          "itens": {
+            "anyOf": [
+              {
+                "items": {
+                  "$ref": "#/components/schemas/ItemPedidoCreate"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Itens"
+          }
+        },
+        "type": "object",
+        "required": [
+          "email"
+        ],
+        "title": "PedidoCreate"
+      },
+      "PedidoOut": {
+        "properties": {
+          "id": {
+            "type": "integer",
+            "title": "Id"
+          },
+          "descricao": {
+            "type": "string",
+            "title": "Descricao"
+          },
+          "quantidade": {
+            "type": "integer",
+            "title": "Quantidade"
+          },
+          "valor_total": {
+            "type": "number",
+            "title": "Valor Total"
+          },
+          "email": {
+            "type": "string",
+            "title": "Email"
+          },
+          "data_pedido": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Data Pedido"
+          },
+          "status": {
+            "type": "string",
+            "title": "Status"
+          },
+          "cliente_id": {
+            "type": "integer",
+            "title": "Cliente Id"
+          },
+          "itens": {
+            "items": {
+              "$ref": "#/components/schemas/ItemPedidoOut"
+            },
+            "type": "array",
+            "title": "Itens",
+            "default": []
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "descricao",
+          "quantidade",
+          "valor_total",
+          "email",
+          "data_pedido",
+          "status",
+          "cliente_id"
+        ],
+        "title": "PedidoOut"
+      },
+      "PizzaCreate": {
+        "properties": {
+          "nome": {
+            "type": "string",
+            "title": "Nome"
+          },
+          "preco_base": {
+            "type": "number",
+            "title": "Preco Base"
+          }
+        },
+        "type": "object",
+        "required": [
+          "nome",
+          "preco_base"
+        ],
+        "title": "PizzaCreate"
+      },
+      "PizzaInput": {
+        "properties": {
+          "nome": {
+            "type": "string",
+            "title": "Nome"
+          },
+          "preco_base": {
+            "type": "number",
+            "title": "Preco Base"
+          },
+          "ingredientes_ids": {
+            "items": {
+              "type": "integer"
+            },
+            "type": "array",
+            "title": "Ingredientes Ids"
+          }
+        },
+        "type": "object",
+        "required": [
+          "nome",
+          "preco_base",
+          "ingredientes_ids"
+        ],
+        "title": "PizzaInput"
+      },
+      "PizzaMontagem": {
+        "properties": {
+          "nome": {
+            "type": "string",
+            "title": "Nome"
+          },
+          "preco_base": {
+            "type": "number",
+            "title": "Preco Base"
+          },
+          "ingredientes": {
+            "items": {
+              "$ref": "#/components/schemas/pizzaria_api_pkg__routers__pizza_personalizada__IngredienteInput"
+            },
+            "type": "array",
+            "title": "Ingredientes"
+          }
+        },
+        "type": "object",
+        "required": [
+          "nome",
+          "preco_base",
+          "ingredientes"
+        ],
+        "title": "PizzaMontagem"
+      },
+      "PizzaOut": {
+        "properties": {
+          "id": {
+            "type": "integer",
+            "title": "Id"
+          },
+          "nome": {
+            "type": "string",
+            "title": "Nome"
+          },
+          "preco_base": {
+            "type": "number",
+            "title": "Preco Base"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "nome",
+          "preco_base"
+        ],
+        "title": "PizzaOut"
+      },
+      "Produto": {
+        "properties": {
+          "id": {
+            "type": "integer",
+            "title": "Id"
+          },
+          "nome": {
+            "type": "string",
+            "title": "Nome"
+          },
+          "descricao": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Descricao"
+          },
+          "preco": {
+            "type": "number",
+            "title": "Preco"
+          },
+          "categoria_id": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Categoria Id"
+          },
+          "tamanhos": {
+            "anyOf": [
+              {
+                "items": {
+                  "$ref": "#/components/schemas/TamanhoPizzaOut"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Tamanhos"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "nome",
+          "descricao",
+          "preco",
+          "categoria_id"
+        ],
+        "title": "Produto"
+      },
+      "ProdutoCreate": {
+        "properties": {
+          "nome": {
+            "type": "string",
+            "title": "Nome"
+          },
+          "descricao": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Descricao"
+          },
+          "preco": {
+            "type": "number",
+            "title": "Preco"
+          },
+          "categoria_id": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Categoria Id"
+          },
+          "tipo": {
+            "type": "string",
+            "title": "Tipo"
+          },
+          "tamanhos": {
+            "anyOf": [
+              {
+                "items": {
+                  "$ref": "#/components/schemas/TamanhoPizzaCreate"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Tamanhos"
+          }
+        },
+        "type": "object",
+        "required": [
+          "nome",
+          "descricao",
+          "preco",
+          "categoria_id",
+          "tipo"
+        ],
+        "title": "ProdutoCreate"
+      },
+      "ProdutoInput": {
+        "properties": {
+          "nome": {
+            "type": "string",
+            "title": "Nome"
+          },
+          "preco": {
+            "type": "number",
+            "title": "Preco"
+          },
+          "descricao": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Descricao"
+          }
+        },
+        "type": "object",
+        "required": [
+          "nome",
+          "preco"
+        ],
+        "title": "ProdutoInput"
+      },
+      "TamanhoPizzaCreate": {
+        "properties": {
+          "nome": {
+            "type": "string",
+            "title": "Nome"
+          },
+          "descricao": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Descricao"
+          },
+          "preco": {
+            "type": "number",
+            "title": "Preco"
+          }
+        },
+        "type": "object",
+        "required": [
+          "nome",
+          "descricao",
+          "preco"
+        ],
+        "title": "TamanhoPizzaCreate"
+      },
+      "TamanhoPizzaOut": {
+        "properties": {
+          "id": {
+            "type": "integer",
+            "title": "Id"
+          },
+          "nome": {
+            "type": "string",
+            "title": "Nome"
+          },
+          "descricao": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Descricao"
+          },
+          "preco": {
+            "type": "number",
+            "title": "Preco"
+          },
+          "produto_id": {
+            "type": "integer",
+            "title": "Produto Id"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "nome",
+          "descricao",
+          "preco",
+          "produto_id"
+        ],
+        "title": "TamanhoPizzaOut"
+      },
+      "TokenResponse": {
+        "properties": {
+          "access_token": {
+            "type": "string",
+            "title": "Access Token"
+          },
+          "token_type": {
+            "type": "string",
+            "title": "Token Type"
+          },
+          "usuario_id": {
+            "type": "integer",
+            "title": "Usuario Id"
+          },
+          "tipo_usuario": {
+            "type": "string",
+            "title": "Tipo Usuario"
+          }
+        },
+        "type": "object",
+        "required": [
+          "access_token",
+          "token_type",
+          "usuario_id",
+          "tipo_usuario"
+        ],
+        "title": "TokenResponse"
+      },
+      "ValidationError": {
+        "properties": {
+          "loc": {
+            "items": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "integer"
+                }
+              ]
+            },
+            "type": "array",
+            "title": "Location"
+          },
+          "msg": {
+            "type": "string",
+            "title": "Message"
+          },
+          "type": {
+            "type": "string",
+            "title": "Error Type"
+          }
+        },
+        "type": "object",
+        "required": [
+          "loc",
+          "msg",
+          "type"
+        ],
+        "title": "ValidationError"
+      },
+      "pizzaria_api_pkg__routers__admin__IngredienteInput": {
+        "properties": {
+          "nome": {
+            "type": "string",
+            "title": "Nome"
+          },
+          "preco": {
+            "type": "number",
+            "title": "Preco",
+            "default": 0
+          }
+        },
+        "type": "object",
+        "required": [
+          "nome"
+        ],
+        "title": "IngredienteInput"
+      },
+      "pizzaria_api_pkg__routers__pizza_personalizada__IngredienteInput": {
+        "properties": {
+          "ingrediente_id": {
+            "type": "integer",
+            "title": "Ingrediente Id"
+          },
+          "quantidade": {
+            "type": "integer",
+            "title": "Quantidade",
+            "default": 1
+          }
+        },
+        "type": "object",
+        "required": [
+          "ingrediente_id"
+        ],
+        "title": "IngredienteInput"
+      }
+    },
+    "securitySchemes": {
+      "OAuth2PasswordBearer": {
+        "type": "oauth2",
+        "flows": {
+          "password": {
+            "scopes": {
+
+            },
+            "tokenUrl": "/usuarios/login"
+          }
+        }
+      }
+    }
+  }
+}

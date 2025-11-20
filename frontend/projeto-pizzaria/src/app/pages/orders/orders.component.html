@@ -1,0 +1,40 @@
+<div class="container">
+  <a [routerLink]="['/home']"><img src="./../../../assets/logo.svg" alt="logo Pizza Exame"></a>
+
+  <div class="pedidos">
+    <h1>Meus pedidos</h1>
+
+    <table tuiTable class="table" [columns]="columns">
+      <thead>
+        <tr tuiThGroup>
+          <th tuiTh [maxWidth]="100" [minWidth]="100" [resizable]="true">Id</th>
+          <th tuiTh [maxWidth]="300" [minWidth]="300">Pedido</th>
+          <th tuiTh [maxWidth]="200" [minWidth]="200">Preço</th>
+          <th tuiTh [maxWidth]="200" [minWidth]="200">Data</th>
+          <th tuiTh [maxWidth]="200" [minWidth]="200">Status</th>
+        </tr>
+      </thead>
+      <tbody tuiTbody [data]="data">
+        <tr *ngFor="let item of data" tuiTr>
+          <td *tuiCell="'orderId'" tuiTd>
+            #{{ item.orderId }}
+          </td>
+          <td *tuiCell="'order'" tuiTd>
+            <ng-container *ngFor="let pedido of item.order">
+              <div class="order-item">{{ pedido.quantity }}x {{ pedido.name }}</div>
+            </ng-container>
+          </td>
+          <td *tuiCell="'price'" tuiTd>
+            {{ getOrderPrice(item) | currency: 'BRL' }}
+          </td>
+          <td *tuiCell="'data'" tuiTd>
+            {{ item.data }}
+          </td>
+          <td *tuiCell="'status'" tuiTd>
+            {{ item.status }}
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

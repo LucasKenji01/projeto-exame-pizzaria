@@ -1,0 +1,151 @@
+from fastapi import APIRouter, Depends, HTTPException
+from sqlalchemy.orm import Session
+from datetime import date, timedelta
+from pizzaria_api_pkg.core_models import (  # ✅ CORREÇÃO: import correto
+    Carrinho, Cliente, Produto, PizzaPersonalizada,
+    Pedido, ItemPedido, Pagamento, Entrega
+)
+from pizzaria_api_pkg.database import get_db
+from pizzaria_api_pkg.schemas.carrinho import CarrinhoItemCreate, CarrinhoItemOut
+from pizzaria_api_pkg.schemas.pedidos import PedidoOut
+from pizzaria_api_pkg.dependencies import get_usuario_logado
+from pizzaria_api_pkg.auth.rbac import role_required
+from pizzaria_api_pkg.services.cupom_carrinho_service import aplicar_cupom_carrinho
+from pizzaria_api_pkg.schemas.cupom_aplicacao import AplicarCupomRequest, AplicarCupomResponse
+
+router = APIRouter(prefix="/carrinho", tags=["Carrinho"])
+
+@router.post("/adicionar", response_model=CarrinhoItemOut)
+def adicionar_item(
+    item: CarrinhoItemCreate,
+    db: Session = Depends(get_db),
+    usuario=Depends(role_required("cliente"))
+):
+    cliente = db.query(Cliente).filter(Cliente.usuario_id == usuario["usuario_id"]).first()
+    if not cliente:
+        raise HTTPException(status_code=404, detail="Cliente não encontrado")
+
+    novo_item = Carrinho(
+        cliente_id=cliente.id,
+        produto_id=item.produto_id,
+        produto_personalizado_id=item.produto_personalizado_id,
+        quantidade=item.quantidade
+    )
+
+    db.add(novo_item)
+    db.commit()
+    db.refresh(novo_item)
+    return novo_item
+
+@router.get("/", response_model=list[CarrinhoItemOut])
+def listar_carrinho(
+    db: Session = Depends(get_db),
+    usuario=Depends(role_required("cliente"))
+):
+    cliente = db.query(Cliente).filter(Cliente.usuario_id == usuario["usuario_id"]).first()
+    if not cliente:
+        raise HTTPException(status_code=404, detail="Cliente não encontrado")
+
+    return db.query(Carrinho).filter(Carrinho.cliente_id == cliente.id).all()
+
+@router.delete("/limpar")
+def limpar_carrinho(
+    db: Session = Depends(get_db),
+    usuario=Depends(role_required("cliente"))
+):
+    cliente = db.query(Cliente).filter(Cliente.usuario_id == usuario["usuario_id"]).first()
+    if not cliente:
+        raise HTTPException(status_code=404, detail="Cliente não encontrado")
+
+    db.query(Carrinho).filter(Carrinho.cliente_id == cliente.id).delete()
+    db.commit()
+    return {"mensagem": "Carrinho limpo com sucesso"}
+
+@router.post("/finalizar", response_model=PedidoOut)
+def finalizar_carrinho(
+    db: Session = Depends(get_db),
+    usuario=Depends(role_required("cliente"))
+):
+    cliente = db.query(Cliente).filter(Cliente.usuario_id == usuario["usuario_id"]).first()
+    if not cliente:
+        raise HTTPException(status_code=404, detail="Cliente não encontrado")
+
+    carrinho = db.query(Carrinho).filter(Carrinho.cliente_id == cliente.id).all()
+    if not carrinho:
+        raise HTTPException(status_code=400, detail="Carrinho vazio")
+
+    valor_total = 0.0
+    itens_pedido = []
+
+    for item in carrinho:
+        if item.produto_id and item.produto:
+            preco_unitario = item.produto.preco
+        elif item.produto_personalizado_id and item.produto_personalizado:
+            preco_unitario = item.produto_personalizado.preco_base
+        else:
+            raise HTTPException(status_code=400, detail="Item inválido no carrinho")
+
+        preco_total = preco_unitario * item.quantidade
+        valor_total += preco_total
+
+        itens_pedido.append(ItemPedido(  # ✅ CORRIGIDO
+            quantidade=item.quantidade,
+            preco_unitario=preco_unitario,
+            preco_total=preco_total,
+            produto_id=item.produto_id,
+            produto_personalizado_id=item.produto_personalizado_id,
+            pedido_id=None
+        ))
+
+    pedido = Pedido(
+        descricao="Pedido via carrinho",
+        quantidade=sum(i.quantidade for i in itens_pedido),
+        valor_total=valor_total,
+        email=cliente.usuario.email,
+        cliente_id=cliente.id
+    )
+
+    db.add(pedido)
+    db.flush()
+
+    for item in itens_pedido:
+        item.pedido_id = pedido.id
+        db.add(item)
+
+    pagamento = Pagamento(
+        pedido_id=pedido.id,
+        forma_pagamento="pix",
+        valor=valor_total,
+        data_pagamento=None
+    )
+    db.add(pagamento)
+
+    entrega = Entrega(
+        pedido_id=pedido.id,
+        endereco_entrega=cliente.endereco or "Endereço não cadastrado",
+        data_prevista=date.today() + timedelta(days=2),
+        status="pendente"
+    )
+    db.add(entrega)
+
+    db.query(Carrinho).filter(Carrinho.cliente_id == cliente.id).delete()
+    db.commit()
+    db.refresh(pedido)
+
+    return pedido
+
+@router.post("/aplicar-cupom", response_model=AplicarCupomResponse)
+def aplicar_cupom(
+    request: AplicarCupomRequest,
+    db: Session = Depends(get_db),
+    usuario=Depends(role_required("cliente"))
+):
+    cliente = db.query(Cliente).filter(
+        Cliente.usuario_id == usuario["usuario_id"]
+    ).first()
+    
+    if not cliente:
+        raise HTTPException(status_code=404, detail="Cliente não encontrado")
+    
+    resultado = aplicar_cupom_carrinho(db, cliente.id, request.cupom_codigo)
+    return resultado

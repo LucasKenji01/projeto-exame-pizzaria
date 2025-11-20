@@ -1,0 +1,58 @@
+:host {
+  display: block;
+  width: 100%;
+  min-height: 100vh;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+:host * {
+  box-sizing: inherit;
+}
+
+.container {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  min-height: 100vh;
+  overflow: hidden;
+}
+
+.left-side {
+  width: 50%;
+  padding: 40px;
+  min-height: 100vh;
+}
+
+.logo {
+  cursor: pointer;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  gap: 24px;
+}
+
+.right-side {
+  width: 50%;
+  min-height: 100vh;
+  overflow: hidden;
+}
+
+.img-right {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+h1 {
+  color: red;
+  text-transform: uppercase;
+}

@@ -1,0 +1,86 @@
+<div class="container">
+  <a [routerLink]="['/home']"><img src="./../../../assets/logo.svg" alt="logo Pizza Exame"></a>
+
+  <div class="container-form">
+    <h1>Minha Conta</h1>
+
+    <!-- Mensagens de Sucesso/Erro -->
+    <div *ngIf="successMessage" class="success-message">
+      ✓ {{ successMessage }}
+    </div>
+
+    <div *ngIf="errorMessage" class="error-message">
+      ✗ {{ errorMessage }}
+    </div>
+
+    <!-- Formulário 1: Dados Pessoais -->
+    <div class="form-section">
+      <h2>Informações Pessoais</h2>
+      <form (ngSubmit)="saveUserData()">
+        <div>
+          <label for="fullname">Nome:</label>
+          <tui-textfield>
+            <label tuiLabel>Nome Completo</label>
+            <input placeholder="Seu nome completo" tuiTextfield name="fullname" type="text" [(ngModel)]="user.fullname" />
+          </tui-textfield>
+        </div>
+
+        <div>
+          <label for="email">Email:</label>
+          <tui-textfield>
+            <label tuiLabel>Email</label>
+            <input placeholder="seu@email.com" tuiTextfield name="email" type="email" [(ngModel)]="user.email" disabled />
+          </tui-textfield>
+        </div>
+
+        <div>
+          <label for="telefone">Telefone:</label>
+          <tui-textfield>
+            <label tuiLabel>Telefone</label>
+            <input placeholder="(11) 99999-9999" tuiTextfield name="telefone" type="tel" [(ngModel)]="user.telefone" />
+          </tui-textfield>
+        </div>
+
+        <div>
+          <label for="endereco">Endereço:</label>
+          <tui-textfield>
+            <label tuiLabel>Endereço</label>
+            <input placeholder="Rua Exemplo, 123" tuiTextfield name="endereco" type="text" [(ngModel)]="user.endereco" />
+          </tui-textfield>
+        </div>
+
+        <button size="m" tuiButton type="submit" [disabled]="isLoading">
+          {{ isLoading ? 'Salvando...' : 'Salvar Dados' }}
+        </button>
+      </form>
+    </div>
+
+    <!-- Formulário 2: Mudar Senha -->
+    <div class="form-section">
+      <h2>Alterar Senha</h2>
+      <form (ngSubmit)="changePassword()">
+        <div>
+          <label for="newPassword">Nova Senha:</label>
+          <tui-textfield>
+            <label tuiLabel>Nova Senha</label>
+            <input placeholder="Mínimo 6 caracteres" tuiTextfield name="newPassword" type="password" [(ngModel)]="newPassword" />
+            <tui-icon tuiPassword />
+          </tui-textfield>
+        </div>
+
+        <div>
+          <label for="confirmPassword">Confirme a Senha:</label>
+          <tui-textfield>
+            <label tuiLabel>Confirme a Senha</label>
+            <input placeholder="Repita a nova senha" tuiTextfield name="confirmPassword" type="password" [(ngModel)]="confirmPassword" />
+            <tui-icon tuiPassword />
+          </tui-textfield>
+        </div>
+
+        <button size="m" tuiButton type="submit" [disabled]="isLoading">
+          {{ isLoading ? 'Alterando...' : 'Alterar Senha' }}
+        </button>
+      </form>
+    </div>
+  </div>
+</div>

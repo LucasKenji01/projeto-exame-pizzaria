@@ -1,0 +1,13 @@
+<div class="container">
+  <img [src]="getImageUrl()" alt="">
+  <div class="card-info">
+    <h1>{{ title }}</h1>
+    <p>{{ description }}</p>
+    <div class="price-buttonadd">
+      <p class="price">{{ price | currency: 'BRL' }}</p>
+      <button tuiButton size="s" (click)="onAddToCart()" class="add-to-cart-btn">
+        <tui-icon icon="@tui.plus"></tui-icon>
+      </button>
+    </div>
+  </div>
+</div>

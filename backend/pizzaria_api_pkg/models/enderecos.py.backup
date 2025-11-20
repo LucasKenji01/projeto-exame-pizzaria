@@ -1,0 +1,45 @@
+from sqlalchemy import Column, Integer, String, ForeignKey, Boolean
+from sqlalchemy.orm import relationship
+from pizzaria_api_pkg.database import Base
+
+class Endereco(Base):
+    # ✅ Nome da tabela conforme migration
+    __tablename__ = "enderecos_clientes"
+    
+    id = Column(Integer, primary_key=True, index=True)
+    cliente_id = Column(Integer, ForeignKey("clientes.id"))
+    
+    # Campos da migration add_new_features
+    apelido = Column(String, nullable=False)
+    cep = Column(String, nullable=False)
+    logradouro = Column(String, nullable=False)
+    numero = Column(String, nullable=False)
+    complemento = Column(String)
+    bairro = Column(String, nullable=False)
+    cidade = Column(String, nullable=False)
+    estado = Column(String, nullable=False)
+    referencia = Column(String)
+    latitude = Column(String)
+    longitude = Column(String)
+    padrao = Column(Boolean, default=False)
+    ativo = Column(Boolean, default=True)
+    
+    # ✅ RELACIONAMENTO REVERSO ADICIONADO
+    cliente = relationship("Cliente", back_populates="enderecos")
+    
+    # Mantém compatibilidade com código antigo que usa 'rua' e 'favorito'
+    @property
+    def rua(self):
+        return self.logradouro
+    
+    @rua.setter
+    def rua(self, value):
+        self.logradouro = value
+    
+    @property
+    def favorito(self):
+        return self.padrao
+    
+    @favorito.setter
+    def favorito(self, value):
+        self.padrao = value

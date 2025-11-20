@@ -1,0 +1,114 @@
+<header>
+  <nav>
+    <ul>
+      <li><a><img src="./../../../assets/logo.svg" alt="logo Pizza Exame"></a></li>
+      <div class="container-li-direita">
+        <ng-container *ngIf="logged; else notlogged">
+          <button tuiButton tuiDropdownOpen type="button" [tuiDropdown]="dropdown" class="avatar-button">
+            <tui-avatar size="m" src="@tui.user"></tui-avatar>
+          </button>
+          <ng-template #dropdown>
+            <a [routerLink]="['/account']" class="dropdown-item">
+              Minha conta
+            </a>
+            <a [routerLink]="['/orders']" class="dropdown-item">
+              Meus pedidos
+            </a>
+          </ng-template>
+        </ng-container>
+
+        <ng-template #notlogged>
+          <div class="container-botoes-entrar-criar">
+            <li><a>
+                <button size="m" appearance="secondary" tuiButton type="button" class="botao-cria-conta" [routerLink]="['/register']">
+                  Criar conta
+                </button>
+              </a></li>
+            <li><a>
+                <button size="m" tuiButton type="button" class="botao-entrar" [routerLink]="['/login']">
+                  Entrar
+                </button>
+              </a></li>
+          </div>
+        </ng-template>
+        <li>
+          <tui-badged-content>
+            <tui-badge-notification size="s">{{ getCartItemsCount() }}</tui-badge-notification>
+            <button tuiButton type="button" (click)="openCart.set(!openCart())" class="cart-button">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-shopping-basket-icon lucide-shopping-basket">
+                <path d="m15 11-1 9" />
+                <path d="m19 11-4-7" />
+                <path d="M2 11h20" />
+                <path d="m3.5 11 1.6 7.4a2 2 0 0 0 2 1.6h9.8a2 2 0 0 0 2-1.6l1.7-7.4" />
+                <path d="M4.5 15.5h15" />
+                <path d="m5 11 4-7" />
+                <path d="m9 11 1 9" />
+              </svg>
+            </button>
+          </tui-badged-content>
+        </li>
+
+        <app-cart [open]="openCart"></app-cart>
+
+        <!-- <li><a href="#">Perfil</a></li> -->
+      </div>
+    </ul>
+  </nav>
+</header>
+
+<main>
+  <div class="container-create-pizza">
+    <button size="m" tuiButton type="button" class="button-create-pizza" (click)="openCreatePizza.set(!openCreatePizza())">Crie sua pizza</button>
+    <app-create-pizza [openCreatePizza]="openCreatePizza" (pizzaCreated)="onCreatePizza($event.name, $event.ingredients)"></app-create-pizza>
+  </div>
+
+
+  <div *ngIf="customPizzas.length > 0">
+    <h1 class="carousel-title">Minhas pizzas criadas</h1>
+
+    <tui-carousel [draggable]="true" [itemsCount]="3" [(index)]="index4">
+      <ng-container *ngFor="let item of customPizzas; let i = index">
+        <app-card *tuiItem [title]="item.title" [description]="item.description" [imageUrl]="item.imageUrl" [price]="item.price" (addToCart)="onAddToCart($event)"></app-card>
+      </ng-container>
+    </tui-carousel>
+  </div>
+
+  <div>
+    <h1 class="carousel-title">Mais pedidos</h1>
+
+    <tui-carousel [draggable]="true" [itemsCount]="3" [(index)]="index1">
+      <ng-container *ngFor="let item of items1; let i = index">
+        <app-card *tuiItem [title]="item.title" [description]="item.description" [imageUrl]="item.imageUrl" [price]="item.price" (addToCart)="onAddToCart($event)"></app-card>
+      </ng-container>
+    </tui-carousel>
+  </div>
+
+  <div>
+    <h1 class="carousel-title">Favoritos</h1>
+
+    <tui-carousel [draggable]="true" [itemsCount]="3" [(index)]="index2">
+      <ng-container *ngFor="let item of items2; let i = index">
+        <app-card *tuiItem [title]="item.title" [description]="item.description" [imageUrl]="item.imageUrl" [price]="item.price" (addToCart)="onAddToCart($event)"></app-card>
+      </ng-container>
+    </tui-carousel>
+  </div>
+
+  <div>
+    <h1 class="carousel-title">Promoções</h1>
+
+    <tui-carousel [draggable]="true" [itemsCount]="3" [(index)]="index3">
+      <ng-container *ngFor="let item of items3; let i = index">
+        <app-card *tuiItem [title]="item.title" [description]="item.description" [imageUrl]="item.imageUrl" [price]="item.price" (addToCart)="onAddToCart($event)"></app-card>
+      </ng-container>
+    </tui-carousel>
+  </div>
+</main>
+
+<span class="divisor"></span>
+
+<footer>
+  <a href="#">
+    <img src="../../../assets/logo.svg" alt="">
+  </a>
+  <p>© 2025 Exame Pizzas. Todos os direitos reservados.</p>
+</footer>

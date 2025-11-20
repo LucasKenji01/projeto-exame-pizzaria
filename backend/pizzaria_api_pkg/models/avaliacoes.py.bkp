@@ -1,0 +1,23 @@
+from sqlalchemy import Column, Integer, String, DateTime, ForeignKey, PrimaryKeyConstraint
+from sqlalchemy.orm import relationship
+from pizzaria_api_pkg.database import Base
+from datetime import datetime
+
+# ✅ Importações dos modelos relacionados
+from pizzaria_api_pkg.models.clientes import Cliente
+from pizzaria_api_pkg.models import Pedido
+
+class Avaliacao(Base):
+    __tablename__ = "avaliacoes"
+    __table_args__ = (
+        PrimaryKeyConstraint("cliente_id", "pedido_id", name="avaliacoes_pkey"),
+    )
+
+    cliente_id = Column(Integer, ForeignKey("clientes.id"))
+    pedido_id = Column(Integer, ForeignKey("pedidos.id"))
+    nota = Column(Integer)
+    comentario = Column(String)
+    data_avaliacao = Column(DateTime, default=datetime.utcnow)
+
+    cliente = relationship("Cliente", back_populates="avaliacoes")
+    pedido = relationship("Pedido", back_populates="avaliacoes")

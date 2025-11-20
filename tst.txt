@@ -1,0 +1,2 @@
+$env:PYTHONPATH = "D:\Lucas\FACULDADE EXAME\3º Semestre\Projeto Integrador\projeto\backend"
+python pizzaria_api_pkg/main.py

@@ -1,0 +1,23 @@
+from sqlalchemy.orm import Session
+from sqlalchemy import func
+from pizzaria_api_pkg.models import Pedido, ItemPedido, Produto
+
+def vendas_por_periodo(db: Session, periodo: str):
+    trunc_map = {
+        "diario": "day",
+        "semanal": "week",
+        "mensal": "month",
+        "anual": "year"
+    }
+    trunc = trunc_map.get(periodo, "month")
+
+    return db.query(
+        Produto.nome.label("pizza"),
+        func.date_trunc(trunc, Pedido.data_pedido).label("periodo"),
+        func.sum(ItemPedido.quantidade).label("quantidade")
+    ).select_from(ItemPedido)\
+     .join(Pedido, ItemPedido.pedido_id == Pedido.id)\
+     .join(Produto, ItemPedido.produto_id == Produto.id)\
+     .group_by(Produto.nome, func.date_trunc(trunc, Pedido.data_pedido))\
+     .order_by(func.date_trunc(trunc, Pedido.data_pedido))\
+     .all()

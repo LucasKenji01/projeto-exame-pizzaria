@@ -1,0 +1,23 @@
+from sqlalchemy import Column, Integer, ForeignKey, DateTime
+from sqlalchemy.orm import relationship
+from pizzaria_api_pkg.database import Base
+from datetime import datetime
+
+class Favorito(Base):
+    # ✅ Nome correto da tabela conforme migration
+    __tablename__ = "produtos_favoritos"
+    
+    id = Column(Integer, primary_key=True, index=True)
+    cliente_id = Column(Integer, ForeignKey("clientes.id", ondelete="CASCADE"))
+    produto_id = Column(Integer, ForeignKey("produtos.id", ondelete="CASCADE"))
+    # ✅ Nome correto da coluna conforme migration
+    data_adicao = Column(DateTime, default=datetime.utcnow)
+    
+    # ✅ RELACIONAMENTOS REVERSOS ADICIONADOS
+    cliente = relationship("Cliente", back_populates="favoritos")
+    produto = relationship("Produto")
+    
+    # Propriedade para compatibilidade com código antigo
+    @property
+    def criado_em(self):
+        return self.data_adicao

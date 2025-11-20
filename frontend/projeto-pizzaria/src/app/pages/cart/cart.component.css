@@ -1,0 +1,72 @@
+.cart-header {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+}
+
+.checkout-button {
+  background-color: red;
+  color: white;
+  width: 100%;
+}
+
+.itens {
+  display: flex;
+  flex-direction: column;
+  height: auto;
+}
+
+.cart-item {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 25px;
+}
+
+.item-details {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 16px;
+}
+
+.item-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.botao-mais {
+  background-color: red;
+}
+
+.botao-menos tui-icon {
+  color: red;
+}
+
+.prices {
+  border-top: 1px solid #dcdcdc;
+  padding-top: 16px;
+  display: flex;
+  flex-direction: column;
+}
+
+.prices p {
+  display: flex;
+  justify-content: space-between;
+  margin: 8px 0;
+}
+
+.subtotal-deliveryfee {
+  font-size: 16px;
+}
+
+.line-price {
+  display: flex;
+  justify-content: space-between;
+}
+
+.total {
+  font-size: 20px;
+  font-weight: bold;
+}

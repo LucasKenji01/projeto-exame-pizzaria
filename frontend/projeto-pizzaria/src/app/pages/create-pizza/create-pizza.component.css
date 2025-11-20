@@ -1,0 +1,129 @@
+:host {
+  display: block;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  pointer-events: none;
+}
+
+:host > * {
+  pointer-events: auto;
+}
+
+tui-drawer {
+  width: 600px;
+  height: 700px;
+  position: fixed;
+  left: calc(50vw - 300px) !important;
+  border-radius: 1.25rem !important;
+  z-index: 1000 !important;
+  pointer-events: auto !important;
+  background: white;
+}
+
+::ng-deep tui-drawer {
+  pointer-events: auto !important;
+}
+
+::ng-deep .tui-drawer {
+  pointer-events: auto !important;
+}
+
+::ng-deep [tuiDrawer] {
+  pointer-events: auto !important;
+}
+
+/* Garantir que o overlay não bloqueie os eventos do drawer */
+::ng-deep .tui-drawer-overlay {
+  pointer-events: none !important;
+}
+
+::ng-deep .tui-drawer-overlay > * {
+  pointer-events: auto !important;
+}
+
+/* Estilos para o conteúdo do drawer */
+::ng-deep tui-drawer > * {
+  pointer-events: auto !important;
+}
+
+/* Garantir que todos os elementos interativos funcionem */
+::ng-deep tui-drawer input,
+::ng-deep tui-drawer button,
+::ng-deep tui-drawer label,
+::ng-deep tui-drawer a {
+  pointer-events: auto !important;
+  cursor: pointer;
+}
+
+::ng-deep tui-drawer input[type="text"],
+::ng-deep tui-drawer input[type="checkbox"] {
+  pointer-events: auto !important;
+  cursor: text;
+}
+
+.main-container {
+  /* height: 1000px; */
+  overflow: hidden;
+  pointer-events: auto !important;
+  position: relative;
+  z-index: 1001;
+}
+
+header, main, footer {
+  pointer-events: auto !important;
+  position: relative;
+  z-index: 1001;
+}
+
+.cart-header {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+}
+
+h2 {
+  margin-bottom: 20px;
+}
+
+.container-ingredients {
+  margin-top: 40px;
+}
+
+.ingredients {
+  display: flex;
+  flex-wrap: wrap !important;
+  gap: 10px;
+}
+
+::ng-deep label[tuiAppearance][data-appearance=accent] {
+  background-color: red !important;
+}
+
+.container-details {
+  margin-top: 40px;
+}
+
+.pizza-name {
+  margin-bottom: 20px;
+}
+
+h3 {
+  margin-bottom: 10px;
+}
+
+.minimo-ingredientes {
+  margin-bottom: 10px;
+}
+
+.button-create-pizza {
+  width: 100%;
+  background-color: red;
+}
+
+tui-badge {
+  margin-right: 10px;
+  margin-bottom: 10px;
+}

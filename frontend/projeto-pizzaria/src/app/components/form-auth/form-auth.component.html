@@ -1,0 +1,78 @@
+<form (ngSubmit)="onSubmit()">
+  <div *ngIf="errorMessage" class="message error-message">
+    {{ errorMessage }}
+  </div>
+  <div *ngIf="successMessage" class="message success-message">
+    {{ successMessage }}
+  </div>
+
+  <label *ngIf="formType === 'register'" for="nome">Nome:</label>
+  <tui-textfield *ngIf="formType === 'register'">
+    <label tuiLabel>Nome Completo</label>
+    <input
+      placeholder="João Silva"
+      tuiTextfield
+      name="nome"
+      type="text"
+      [(ngModel)]="nome"
+    />
+  </tui-textfield>
+
+  <label for="email">Email:</label>
+  <tui-textfield>
+    <label tuiLabel>Email</label>
+    <input
+      placeholder="user@email.com"
+      tuiTextfield
+      name="email"
+      type="email"
+      [(ngModel)]="email"
+    />
+  </tui-textfield>
+
+  <label for="password">Senha:</label>
+  <tui-textfield>
+    <label tuiLabel>Senha</label>
+    <input
+    placeholder="********"
+      tuiTextfield
+      name="password"
+      type="password"
+      [(ngModel)]="password"
+    />
+    <tui-icon tuiPassword />
+  </tui-textfield>
+
+  <label *ngIf="formType === 'register'" for="telefone">Telefone:</label>
+  <tui-textfield *ngIf="formType === 'register'">
+    <label tuiLabel>Telefone</label>
+    <input
+      placeholder="(11) 99999-9999"
+      tuiTextfield
+      name="telefone"
+      type="tel"
+      [(ngModel)]="telefone"
+    />
+  </tui-textfield>
+
+  <label *ngIf="formType === 'register'" for="endereco">Endereço:</label>
+  <tui-textfield *ngIf="formType === 'register'">
+    <label tuiLabel>Endereço</label>
+    <input
+      placeholder="Rua Exemplo, 123"
+      tuiTextfield
+      name="endereco"
+      type="text"
+      [(ngModel)]="endereco"
+    />
+  </tui-textfield>
+
+  <button
+    size="m"
+    tuiButton
+    type="submit"
+    [disabled]="isLoading"
+  >
+    {{ isLoading ? 'Carregando...' : (formType === 'login' ? 'Entrar' : 'Cadastrar') }}
+  </button>
+</form>

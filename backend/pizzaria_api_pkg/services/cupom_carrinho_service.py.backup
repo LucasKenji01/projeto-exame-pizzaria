@@ -1,0 +1,43 @@
+from sqlalchemy.orm import Session
+from pizzaria_api_pkg.core_models import Carrinho, Cupom, Produto, PizzaPersonalizada
+from datetime import date
+from fastapi import HTTPException
+
+def aplicar_cupom_carrinho(db: Session, cliente_id: int, cupom_codigo: str):
+    """Aplica cupom de desconto aos itens do carrinho"""
+    
+    cupom = db.query(Cupom).filter(
+        Cupom.codigo == cupom_codigo,
+        Cupom.ativo == True
+    ).first()
+    
+    if not cupom:
+        raise HTTPException(status_code=404, detail="Cupom não encontrado ou inativo")
+    
+    if cupom.validade and cupom.validade < date.today():
+        raise HTTPException(status_code=400, detail="Cupom expirado")
+    
+    itens = db.query(Carrinho).filter(Carrinho.cliente_id == cliente_id).all()
+    
+    if not itens:
+        raise HTTPException(status_code=400, detail="Carrinho vazio")
+    
+    valor_original = 0.0
+    for item in itens:
+        if item.produto_id:
+            preco = db.query(Produto).filter(Produto.id == item.produto_id).first().preco
+        else:
+            preco = db.query(PizzaPersonalizada).filter(
+                PizzaPersonalizada.id == item.produto_personalizado_id
+            ).first().preco_base
+        valor_original += preco * item.quantidade
+    
+    desconto = valor_original * (cupom.percentual_desconto / 100)
+    valor_final = valor_original - desconto
+    
+    return {
+        "mensagem": f"Cupom {cupom_codigo} aplicado com sucesso!",
+        "desconto_aplicado": round(desconto, 2),
+        "valor_original": round(valor_original, 2),
+        "valor_final": round(valor_final, 2)
+    }

@@ -1,0 +1,13 @@
+from pizzaria_api_pkg.core_models import (
+    Cliente,
+    Produto,
+    Pedido,
+    ItemPedido,  # ✅ Adicionado para corrigir o erro
+    Carrinho,
+    Entrega,
+    Cupom,
+    PizzaPersonalizada
+)
+
+from pizzaria_api_pkg.models.enderecos import Endereco
+from pizzaria_api_pkg.models.favoritos import Favorito
