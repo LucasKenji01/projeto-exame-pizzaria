@@ -20,18 +20,23 @@
     </ng-container>
 
     <ng-template #cartWithItems>
-      <div class="itens">
+      <div class="itens" #itemsContainer>
         <div *ngFor="let item of cartItems" class="cart-item">
           <div class="item-details">
-            <p>{{ item.quantity }}x {{ item.name }}</p>
-            <p>{{ item.price * item.quantity | currency:'BRL' }}</p>
+            <div class="item-info">
+              <p class="item-name">{{ item.quantidade }}x {{ item.nome }}</p>
+              <p class="item-price">{{ item.preco_total | currency:'BRL' }}</p>
+            </div>
           </div>
           <div class="item-actions">
-            <button tuiButton type="button" size="s" appearance="primary" class="botao-mais" (click)="incrementItem(item)">
+            <button tuiButton type="button" size="s" appearance="primary" class="botao-mais" (click)="incrementItem(item)" title="Adicionar mais">
               <tui-icon icon="@tui.plus"></tui-icon>
             </button>
-            <button tuiButton type="button" size="s" appearance="outline" class="botao-menos" (click)="decrementItem(item)">
+            <button tuiButton type="button" size="s" appearance="outline" class="botao-menos" (click)="decrementItem(item)" title="Remover um">
               <tui-icon icon="@tui.minus"></tui-icon>
+            </button>
+            <button tuiButton type="button" size="s" appearance="outline" class="botao-remover" (click)="removeItem(item)" title="Remover do carrinho">
+              <tui-icon icon="@tui.trash"></tui-icon>
             </button>
           </div>
         </div>

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Observable, BehaviorSubject } from 'rxjs';
 import { tap } from 'rxjs/operators';
 
@@ -100,20 +100,8 @@ export class AuthService {
    * Obter dados do cliente logado
    */
   getClienteInfo(): Observable<ClienteResponse> {
-    const token = this.getToken();
-    console.log('✓ getClienteInfo: Token encontrado?', !!token);
-    console.log('✓ getClienteInfo: Token value:', token ? token.substring(0, 20) + '...' : 'NO TOKEN');
-
-    // Enviar token manualmente no header como fallback
-    const headers = token ? new HttpHeaders({
-      'Authorization': `Bearer ${token}`,
-      'Content-Type': 'application/json'
-    }) : undefined;
-
-    console.log('✓ getClienteInfo: Headers que serão enviados:', headers ? 'YES (com Authorization)' : 'NO');
     console.log('✓ getClienteInfo: Fazendo requisição para GET /clientes/me');
-
-    return this.http.get<ClienteResponse>(`${this.API_URL}/clientes/me`, { headers }).pipe(
+    return this.http.get<ClienteResponse>(`${this.API_URL}/clientes/me`).pipe(
       tap((response) => {
         console.log('✓ getClienteInfo: SUCCESS - Resposta recebida:', response);
       })
@@ -136,13 +124,6 @@ export class AuthService {
    * Alterar senha do usuário autenticado
    */
   alterarSenha(novaSenha: string, confirmacaoSenha: string): Observable<any> {
-    const token = this.getToken();
-
-    const headers = token ? new HttpHeaders({
-      'Authorization': `Bearer ${token}`,
-      'Content-Type': 'application/json'
-    }) : undefined;
-
     console.log('✓ alterarSenha: Enviando requisição para POST /usuarios/alterar-senha');
 
     return this.http.post<any>(
@@ -150,8 +131,7 @@ export class AuthService {
       {
         nova_senha: novaSenha,
         confirmacao_senha: confirmacaoSenha
-      },
-      { headers }
+      }
     ).pipe(
       tap((response) => {
         console.log('✓ alterarSenha: SUCCESS -', response);
@@ -163,19 +143,11 @@ export class AuthService {
    * Atualizar dados do cliente (nome, telefone, endereço)
    */
   updateClienteData(dados: any): Observable<ClienteResponse> {
-    const token = this.getToken();
-
-    const headers = token ? new HttpHeaders({
-      'Authorization': `Bearer ${token}`,
-      'Content-Type': 'application/json'
-    }) : undefined;
-
     console.log('✓ updateClienteData: Enviando requisição para PUT /clientes/me');
 
     return this.http.put<ClienteResponse>(
       `${this.API_URL}/clientes/me`,
-      dados,
-      { headers }
+      dados
     ).pipe(
       tap((response) => {
         console.log('✓ updateClienteData: SUCCESS -', response);

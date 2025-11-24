@@ -21,8 +21,18 @@ def adicionar_item(
     db: Session = Depends(get_db),
     usuario=Depends(role_required("cliente"))
 ):
+    print("\n" + "="*80)
+    print(f"🔔 [POST /carrinho/adicionar] INICIANDO ADIÇÃO DE ITEM")
+    print(f"   - usuario_id: {usuario['usuario_id']}")
+    print(f"   - tipo_usuario: {usuario['tipo_usuario']}")
+    print(f"   - item.produto_id: {item.produto_id}")
+    print(f"   - item.produto_personalizado_id: {item.produto_personalizado_id}")
+    print(f"   - item.quantidade: {item.quantidade}")
+    print("="*80 + "\n")
+    
     cliente = db.query(Cliente).filter(Cliente.usuario_id == usuario["usuario_id"]).first()
     if not cliente:
+        print(f"❌ Cliente não encontrado para usuario_id {usuario['usuario_id']}")
         raise HTTPException(status_code=404, detail="Cliente não encontrado")
 
     # ✅ NOVO: Verificar se o produto já existe no carrinho
@@ -46,9 +56,11 @@ def adicionar_item(
         item_existente.quantidade += item.quantidade
         db.commit()
         db.refresh(item_existente)
+        print(f"✅ Item atualizado com sucesso!")
         return item_existente
     else:
         # ✅ NOVO: Criar novo item
+        print(f"✅ Item é novo. Criando...")
         novo_item = Carrinho(
             cliente_id=cliente.id,
             produto_id=item.produto_id,
@@ -59,6 +71,7 @@ def adicionar_item(
         db.add(novo_item)
         db.commit()
         db.refresh(novo_item)
+        print(f"✅ Novo item criado com sucesso! ID: {novo_item.id}")
         return novo_item
 
 @router.get("/", response_model=list[CarrinhoItemOut])

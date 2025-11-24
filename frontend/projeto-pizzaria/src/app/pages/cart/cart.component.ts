@@ -1,4 +1,4 @@
-import { Component, Input, WritableSignal, Output, EventEmitter, OnInit } from '@angular/core';
+import { Component, Input, WritableSignal, Output, EventEmitter, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { TuiPopup, TuiButton, TuiIcon } from '@taiga-ui/core';
 import { TuiDrawer } from '@taiga-ui/kit';
 import { CommonModule } from '@angular/common';
@@ -21,6 +21,10 @@ export class CartComponent implements OnInit {
   isLoading: boolean = false;
 
   cartItems: any[] = [];
+  @ViewChild('itemsContainer') itemsContainer!: ElementRef<HTMLElement>;
+
+  // When non-null, carregarCarrinho will restore this scrollTop after reload
+  private pendingScrollTop: number | null = null;
 
   constructor(
     private pedidosService: PedidosService,
@@ -42,22 +46,27 @@ export class CartComponent implements OnInit {
       next: (response) => {
         console.log('📦 Carrinho carregado:', response);
         this.cartItems = response.itens || [];
+        // Restaurar posição de scroll se houver uma pendência
+        if (this.pendingScrollTop !== null) {
+          // esperar próxima microtask para garantir que DOM foi atualizado
+          setTimeout(() => {
+            try {
+              if (this.itemsContainer && this.itemsContainer.nativeElement) {
+                this.itemsContainer.nativeElement.scrollTop = this.pendingScrollTop as number;
+              }
+            } catch (err) {
+              console.warn('Não foi possível restaurar scroll do carrinho:', err);
+            } finally {
+              this.pendingScrollTop = null;
+            }
+          }, 0);
+        }
       },
       error: (error) => {
         console.error('❌ Erro ao carregar carrinho:', error);
         this.cartItems = [];
       }
     });
-  }
-
-  addItem(item: { name: string; description?: string; quantity: number; price: number }) {
-    const existingItem = this.cartItems.find(cartItem => cartItem.name === item.name);
-
-    if (existingItem) {
-      existingItem.quantity += item.quantity;
-    } else {
-      this.cartItems.push(item);
-    }
   }
 
   /**
@@ -67,34 +76,49 @@ export class CartComponent implements OnInit {
   incrementItem(item: any) {
     if (!item.id) return;
 
-    console.log('⬆️ Incrementando item:', item.name);
-    const novaQuantidade = item.quantity + 1;
+    console.log('⬆️ Incrementando item (optimista):', item.nome);
+    const novaQuantidade = item.quantidade + 1;
 
-    // Remover item atual do backend
-    this.carrinhoService.removerItem(item.id).subscribe({
-      next: () => {
-        // Readicionar com nova quantidade
-        const produtoId = item.produto_id || null;
-        const pizzaId = item.pizza_id || null;
+    // Atualização otimista local (mantém ordem)
+    const idx = this.cartItems.findIndex((ci: any) => ci.id === item.id || (ci.produto_id === item.produto_id && ci.pizza_id === item.pizza_id));
+    if (idx !== -1) {
+      // atualizar localmente imediatamente
+      const local = this.cartItems[idx];
+      local.quantidade = novaQuantidade;
+      if (local.preco_unitario != null) {
+        local.preco_total = local.preco_unitario * novaQuantidade;
+      }
+    }
 
-        this.carrinhoService.adicionarItem({
-          produto_id: produtoId,
-          produto_personalizado_id: pizzaId,
-          quantidade: novaQuantidade
-        }).subscribe({
-          next: (resposta) => {
-            console.log('✅ Item atualizado com sucesso');
-            // Atualizar apenas o item local sem recarregar todo o carrinho
-            item.quantity = resposta.quantidade;
-            item.preco_total = resposta.quantidade * item.preco_unitario;
-          },
-          error: (error) => {
-            console.error('❌ Erro ao readicionar item:', error);
+    // Requisitar ao backend para persistir (+1)
+    const produtoId = item.produto_id || null;
+    const pizzaId = item.pizza_id || null;
+
+    this.carrinhoService.adicionarItem({
+      produto_id: produtoId,
+      produto_personalizado_id: pizzaId,
+      quantidade: 1
+    }).subscribe({
+      next: (resp: any) => {
+        // sincronizar campos retornados (id/quantidade)
+        try {
+          const idx2 = this.cartItems.findIndex((ci: any) => ci.id === item.id || (ci.produto_id === item.produto_id && ci.pizza_id === item.pizza_id));
+          if (idx2 !== -1) {
+            this.cartItems[idx2].quantidade = resp.quantidade;
+            // atualizar id caso tenha mudado
+            this.cartItems[idx2].id = resp.id;
+            if (this.cartItems[idx2].preco_unitario != null) {
+              this.cartItems[idx2].preco_total = this.cartItems[idx2].preco_unitario * resp.quantidade;
+            }
           }
-        });
+        } catch (err) {
+          console.warn('Erro ao sincronizar item após adicionar:', err);
+        }
       },
       error: (error) => {
-        console.error('❌ Erro ao remover item:', error);
+        console.error('❌ Erro ao adicionar item (+1):', error);
+        // Em caso de erro, recarregar para garantir consistência
+        this.carregarCarrinho();
       }
     });
   }
@@ -111,31 +135,49 @@ export class CartComponent implements OnInit {
     if (item.quantidade > 1) {
       const novaQuantidade = item.quantidade - 1;
 
-      // Remover item atual do backend
+      console.log('⬇️ Decrementando item (optimista):', item.nome);
+
+      // Atualização otimista local (mantém ordem)
+      const idx = this.cartItems.findIndex((ci: any) => ci.id === item.id || (ci.produto_id === item.produto_id && ci.pizza_id === item.pizza_id));
+      if (idx !== -1) {
+        const local = this.cartItems[idx];
+        local.quantidade = novaQuantidade;
+        if (local.preco_unitario != null) {
+          local.preco_total = local.preco_unitario * novaQuantidade;
+        }
+      }
+
+      // Para persistir a nova quantidade, removemos e readicionamos no backend (como antes)
+      // mas NÃO recarregamos a lista ao final — mantemos a ordem local.
       this.carrinhoService.removerItem(item.id).subscribe({
         next: () => {
-          // Readicionar com nova quantidade
           const produtoId = item.produto_id || null;
           const pizzaId = item.pizza_id || null;
-
           this.carrinhoService.adicionarItem({
             produto_id: produtoId,
             produto_personalizado_id: pizzaId,
             quantidade: novaQuantidade
           }).subscribe({
-            next: (resposta) => {
-              console.log('✅ Item atualizado com sucesso');
-              // Atualizar apenas o item local sem recarregar todo o carrinho
-              item.quantity = resposta.quantidade;
-              item.preco_total = resposta.quantidade * item.preco_unitario;
+            next: (resp: any) => {
+              // atualizar id/quantidade local conforme resposta
+              const idx2 = this.cartItems.findIndex((ci: any) => ci.produto_id === produtoId && ci.pizza_id === pizzaId);
+              if (idx2 !== -1) {
+                this.cartItems[idx2].id = resp.id;
+                this.cartItems[idx2].quantidade = resp.quantidade;
+                if (this.cartItems[idx2].preco_unitario != null) {
+                  this.cartItems[idx2].preco_total = this.cartItems[idx2].preco_unitario * resp.quantidade;
+                }
+              }
             },
             error: (error) => {
-              console.error('❌ Erro ao readicionar item:', error);
+              console.error('❌ Erro ao re-adicionar item (decrement):', error);
+              this.carregarCarrinho();
             }
           });
         },
         error: (error) => {
-          console.error('❌ Erro ao remover item:', error);
+          console.error('❌ Erro ao remover item (decrement):', error);
+          this.carregarCarrinho();
         }
       });
     } else {
@@ -150,18 +192,25 @@ export class CartComponent implements OnInit {
   removeItem(item: any) {
     if (!item.id) return;
 
-    console.log('🗑️ Removendo item:', item.name);
+    console.log('🗑️ Removendo item:', item.nome);
+    // Atualização otimista local: remover da lista e manter scroll
+    const idx = this.cartItems.findIndex((ci: any) => ci.id === item.id || (ci.produto_id === item.produto_id && ci.pizza_id === item.pizza_id));
+    if (idx !== -1) {
+      // capturar scroll antes da remoção
+      try { this.pendingScrollTop = this.itemsContainer?.nativeElement?.scrollTop ?? null; } catch { this.pendingScrollTop = null; }
+      this.cartItems.splice(idx, 1);
+    }
+
     this.carrinhoService.removerItem(item.id).subscribe({
       next: () => {
-        console.log('✅ Item removido com sucesso');
-        // Remover do array local sem recarregar
-        const index = this.cartItems.indexOf(item);
-        if (index > -1) {
-          this.cartItems.splice(index, 1);
-        }
+        console.log('✅ Item removido do backend com sucesso');
+        // não recarregamos inteira a lista para evitar reordenação
+        // atualizar contagem já é feita pelo serviço
       },
       error: (error) => {
-        console.error('❌ Erro ao remover item:', error);
+        console.error('❌ Erro ao remover item no backend:', error);
+        // fallback: recarregar para garantir consistência
+        this.carregarCarrinho();
       }
     });
   }
@@ -171,7 +220,7 @@ export class CartComponent implements OnInit {
 
     for (let item of this.cartItems) {
       // Usar preco_total do backend (já é quantidade * preco_unitario)
-      itemTotal += item.quantity * item.price || 0;
+      itemTotal += item.preco_total || 0;
     }
 
     return itemTotal;

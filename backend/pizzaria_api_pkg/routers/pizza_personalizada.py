@@ -116,3 +116,18 @@ def calcular_preco(pizza_id: int, db: Session = Depends(get_db)):
 @router.get("/")
 def listar_pizzas_personalizadas():
     return [{"id": 1, "nome": "Pizza Teste"}]
+
+
+@router.delete("/{pizza_id}", response_model=dict)
+def excluir_pizza_personalizada(pizza_id: int, db: Session = Depends(get_db), usuario=Depends(get_usuario_autenticado)):
+    cliente = db.query(Cliente).filter(Cliente.usuario_id == usuario["usuario_id"]).first()
+    if not cliente:
+        raise HTTPException(status_code=404, detail="Cliente não encontrado")
+
+    pizza = db.query(PizzaPersonalizada).filter_by(id=pizza_id, cliente_id=cliente.id).first()
+    if not pizza:
+        raise HTTPException(status_code=404, detail="Pizza personalizada não encontrada")
+
+    db.delete(pizza)
+    db.commit()
+    return {"mensagem": "Pizza personalizada excluída com sucesso"}

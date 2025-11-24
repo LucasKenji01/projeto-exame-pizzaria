@@ -8,6 +8,8 @@ import { CartComponent } from "../cart/cart.component";
 import { CreatePizzaComponent } from "../create-pizza/create-pizza.component";
 import { AuthService } from '../../services/auth.service';
 import { ProdutosService, Produto } from '../../services/produtos.service';
+import { PizzasService } from '../../services/pizzas.service';
+import { CarrinhoService } from '../../services/carrinho.service';
 import { Subscription } from 'rxjs';
 
 @Component({
@@ -34,7 +36,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   protected readonly openCart = signal(false);
   protected readonly openCreatePizza = signal(false);
 
-  protected customPizzas: { title: string; description: string; imageUrl: string; price: number }[] = [];
+  protected customPizzas: { id?: number; title: string; description: string; imageUrl: string; price: number }[] = [];
 
   logged: boolean = false;
   isLoading: boolean = false;
@@ -45,8 +47,10 @@ export class HomeComponent implements OnInit, OnDestroy {
   constructor(
     private authService: AuthService,
     private produtosService: ProdutosService,
+    private carrinhoService: CarrinhoService,
+    private pizzasService: PizzasService,
     private router: Router
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     // Verificar se o usuário está logado ao inicializar o componente
@@ -62,7 +66,32 @@ export class HomeComponent implements OnInit, OnDestroy {
     // Carregar produtos do banco de dados
     this.carregarProdutos();
 
+    // Carregar pizzas personalizadas do usuário
+    this.carregarMinhasPizzas();
+
     this.allPizzas = [];
+  }
+
+  /**
+   * Carrega as pizzas personalizadas do usuário e popula `customPizzas`
+   */
+  carregarMinhasPizzas(): void {
+    this.pizzasService.listarMinhas().subscribe({
+      next: (pizzas) => {
+        this.customPizzas = pizzas.map(p => ({
+          id: p.id,
+          title: p.nome,
+          description: '',
+          imageUrl: '/assets/pizzas/logo.svg',
+          price: p.preco_base,
+          custom: true
+        }));
+      },
+      error: (err) => {
+        console.warn('Não foi possível carregar pizzas personalizadas:', err);
+        // manter customPizzas como está (pode ter valores locais ainda)
+      }
+    });
   }
 
   /**
@@ -142,7 +171,7 @@ export class HomeComponent implements OnInit, OnDestroy {
       {
         title: 'Pizza de Calabresa',
         description: 'Deliciosa pizza de calabresa com borda recheada de catupiry.',
-        imageUrl: 'assets/pizza-calabresa.jpg',
+        imageUrl: '/assets/pizzas/logo.svg',
         price: 35.00
       },
     ];
@@ -166,28 +195,76 @@ export class HomeComponent implements OnInit, OnDestroy {
     if (!this.cartComponent || !this.cartComponent.cartItems) {
       return 0;
     }
-    return this.cartComponent.cartItems.reduce((total, item) => total + (item.quantity || 0), 0);
+    // Alguns lugares usam 'quantidade' (backend) e outros podem usar 'quantity' (legacy).
+    // Somar com fallback para cobrir ambos os casos.
+    return this.cartComponent.cartItems.reduce((total, item) => {
+      const q = (item.quantidade ?? item.quantity ?? 0);
+      return total + (Number(q) || 0);
+    }, 0);
   }
 
-  onAddToCart(item: { title: string; description: string; price: number }) {
-    this.cartComponent.addItem({
-      name: item.title,
-      description: item.description,
-      quantity: 1,
-      price: item.price
+  onAddToCart(item: { id: number; title: string; description: string; price: number }) {
+    console.log('🛒 Adicionando item ao carrinho:', item.title, 'ID:', item.id);
+
+    // Adicionar ao backend
+    this.carrinhoService.adicionarItem({
+      produto_id: item.id,
+      quantidade: 1
+    }).subscribe({
+      next: () => {
+        console.log('✅ Item adicionado ao carrinho com sucesso');
+        // Recarregar carrinho para atualizar view
+        this.cartComponent.carregarCarrinho();
+      },
+      error: (error) => {
+        console.error('❌ Erro ao adicionar item:', error);
+        alert('Erro ao adicionar item ao carrinho. Você está logado?');
+      }
     });
   }
 
   public onCreatePizza(pizzaName: string, ingredients: string[]): void {
-    const newPizza = {
-      title: pizzaName,
-      description: 'Ingredientes: ' + ingredients.join(', '),
-      imageUrl: 'assets/pizza-calabresa.jpg', // Usar imagem padrão
-      price: 60.00
-    };
+    const precoBase = 60.0;
 
-    this.customPizzas.push(newPizza);
-    this.openCreatePizza.set(false);
+    this.pizzasService.criarPizza(pizzaName, precoBase).subscribe({
+      next: (created) => {
+        const newPizza = {
+          id: created.id,
+          title: created.nome,
+          description: 'Ingredientes: ' + ingredients.join(', '),
+          imageUrl: '/assets/pizzas/logo.svg',
+          logoOverlay: false,
+          price: created.preco_base,
+          custom: true
+        };
+
+        this.customPizzas.push(newPizza);
+        this.openCreatePizza.set(false);
+      },
+      error: (err) => {
+        console.error('Erro ao criar pizza personalizada:', err);
+        alert('Não foi possível salvar a pizza personalizada. Verifique se você está logado.');
+      }
+    });
+  }
+
+  public onDeleteCustom(pizzaId: number) {
+    if (!confirm('Excluir esta pizza personalizada?')) return;
+
+    this.pizzasService.excluirPizza(pizzaId).subscribe({
+      next: () => {
+        this.customPizzas = this.customPizzas.filter(p => p.id !== pizzaId);
+      },
+      error: (err) => {
+        console.error('Erro ao excluir pizza personalizada:', err);
+        alert('Não foi possível excluir a pizza.');
+      }
+    });
+  }
+
+  // Template helper to safely read logoOverlay from items with unknown shape
+  public getLogoOverlay(item: any): any {
+    return item && (item as any).logoOverlay;
   }
 
   /**

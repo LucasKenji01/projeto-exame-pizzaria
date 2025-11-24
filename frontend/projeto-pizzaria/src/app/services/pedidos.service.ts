@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { AuthService } from './auth.service';
 
 export interface ItemPedidoResponse {
   id: number;
@@ -43,35 +42,15 @@ export interface PedidoRequest {
 export class PedidosService {
   private apiUrl = 'http://localhost:8000/pedidos';
 
-  constructor(private http: HttpClient, private authService: AuthService) { }
-
-  /**
-   * Obter headers com token de autenticação
-   */
-  private getHeaders(): HttpHeaders {
-    const token = this.authService.getToken();
-    console.log('🔐 PedidosService: Criando headers com token:', !!token);
-
-    if (token) {
-      return new HttpHeaders({
-        'Authorization': `Bearer ${token}`,
-        'Content-Type': 'application/json'
-      });
-    }
-    return new HttpHeaders({
-      'Content-Type': 'application/json'
-    });
-  }
+  constructor(private http: HttpClient) { }
 
   /**
    * Finalizar pedido (criar novo pedido a partir do carrinho)
    */
   finalizarPedido(pedidoData: PedidoRequest): Observable<Pedido> {
     console.log('📤 PedidosService.finalizarPedido: Iniciando requisição POST /pedidos/finalizar');
-    const headers = this.getHeaders();
-    console.log('📤 PedidosService: Headers com token?', headers.has('Authorization'));
 
-    return this.http.post<Pedido>(`${this.apiUrl}/finalizar`, pedidoData, { headers });
+    return this.http.post<Pedido>(`${this.apiUrl}/finalizar`, pedidoData);
   }
 
   /**
@@ -79,17 +58,14 @@ export class PedidosService {
    */
   listarMeusPedidos(): Observable<Pedido[]> {
     console.log('📥 PedidosService.listarMeusPedidos: Iniciando requisição GET /pedidos/me');
-    const headers = this.getHeaders();
-    console.log('📥 PedidosService: Headers com token?', headers.has('Authorization'));
 
-    return this.http.get<Pedido[]>(`${this.apiUrl}/me`, { headers });
+    return this.http.get<Pedido[]>(`${this.apiUrl}/me`);
   }
 
   /**
    * Obter um pedido específico por ID
    */
   obterPedidoPorId(pedidoId: number): Observable<Pedido> {
-    const headers = this.getHeaders();
-    return this.http.get<Pedido>(`${this.apiUrl}/${pedidoId}`, { headers });
+    return this.http.get<Pedido>(`${this.apiUrl}/${pedidoId}`);
   }
 }

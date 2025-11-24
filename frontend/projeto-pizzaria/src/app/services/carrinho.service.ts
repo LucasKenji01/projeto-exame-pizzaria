@@ -1,8 +1,7 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Observable, BehaviorSubject } from 'rxjs';
 import { tap, catchError } from 'rxjs/operators';
-import { AuthService } from './auth.service';
 
 @Injectable({
   providedIn: 'root'
@@ -15,8 +14,7 @@ export class CarrinhoService {
   public cartCount$ = this.cartCountSubject.asObservable();
 
   constructor(
-    private http: HttpClient,
-    private authService: AuthService
+    private http: HttpClient
   ) {
     // Carregar contagem inicial ao inicializar o serviço
     this.carregarContagem();
@@ -36,22 +34,6 @@ export class CarrinhoService {
   }
 
   /**
-   * Obter headers com token JWT
-   */
-  private getHeaders(): HttpHeaders {
-    const token = this.authService.getToken();
-    if (token) {
-      return new HttpHeaders({
-        'Authorization': `Bearer ${token}`,
-        'Content-Type': 'application/json'
-      });
-    }
-    return new HttpHeaders({
-      'Content-Type': 'application/json'
-    });
-  }
-
-  /**
    * Atualizar contagem interna
    */
   private atualizarContagem(quantidade: number): void {
@@ -62,8 +44,7 @@ export class CarrinhoService {
    * Adicionar item ao carrinho
    */
   adicionarItem(item: { produto_id?: number; produto_personalizado_id?: number; quantidade: number }): Observable<any> {
-    const headers = this.getHeaders();
-    return this.http.post<any>(`${this.apiUrl}/adicionar`, item, { headers }).pipe(
+    return this.http.post<any>(`${this.apiUrl}/adicionar`, item).pipe(
       tap(() => {
         // Recarregar contagem após adicionar
         this.listarCarrinho().subscribe(
@@ -84,26 +65,23 @@ export class CarrinhoService {
    * Listar itens do carrinho (simples)
    */
   listarCarrinho(): Observable<any[]> {
-    const headers = this.getHeaders();
-    return this.http.get<any[]>(`${this.apiUrl}/`, { headers });
+    return this.http.get<any[]>(`${this.apiUrl}/`);
   }
 
   /**
    * Listar carrinho com detalhes completos dos produtos
    */
   listarCarrinhoDetalhado(): Observable<any> {
-    const headers = this.getHeaders();
-    return this.http.get<any>(`${this.apiUrl}/detalhado`, { headers });
+    return this.http.get<any>(`${this.apiUrl}/detalhado`);
   }
 
   /**
    * Remover item do carrinho
    */
   removerItem(itemId: number): Observable<any> {
-    const headers = this.getHeaders();
     const url = `${this.apiUrl}/${itemId}`;
-    console.log('🔍 DEBUG removerItem:', { itemId, url, headers: headers.keys() });
-    return this.http.delete<any>(url, { headers }).pipe(
+    console.log('🔍 DEBUG removerItem:', { itemId, url });
+    return this.http.delete<any>(url).pipe(
       tap((response: any) => {
         console.log('✅ DELETE sucesso:', response);
         // Recarregar contagem após deletar
@@ -125,10 +103,9 @@ export class CarrinhoService {
    * Limpar todo o carrinho
    */
   limparCarrinho(): Observable<any> {
-    const headers = this.getHeaders();
     const url = `${this.apiUrl}/limpar`;
     console.log('🔍 DEBUG limparCarrinho:', { url });
-    return this.http.delete<any>(url, { headers }).pipe(
+    return this.http.delete<any>(url).pipe(
       tap(() => {
         this.atualizarContagem(0);
       })

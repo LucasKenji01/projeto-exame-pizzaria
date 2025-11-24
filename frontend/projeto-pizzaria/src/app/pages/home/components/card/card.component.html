@@ -1,13 +1,21 @@
 <div class="container">
-  <img [src]="getImageUrl()" alt="">
+  <div class="image-wrapper">
+    <img [src]="getImageUrl()" [class.logo-image]="isLogoImage()" alt="">
+    <img *ngIf="getLogoUrl()" class="logo-overlay" [src]="getLogoUrl()" alt="logo">
+  </div>
   <div class="card-info">
     <h1>{{ title }}</h1>
     <p>{{ description }}</p>
     <div class="price-buttonadd">
       <p class="price">{{ price | currency: 'BRL' }}</p>
-      <button tuiButton size="s" (click)="onAddToCart()" class="add-to-cart-btn">
-        <tui-icon icon="@tui.plus"></tui-icon>
-      </button>
+      <div class="card-actions">
+        <button tuiButton size="s" (click)="onAddToCart()" class="add-to-cart-btn">
+          <tui-icon icon="@tui.plus"></tui-icon>
+        </button>
+        <button *ngIf="isCustom" tuiButton size="s" appearance="danger" class="delete-custom-btn" (click)="onDeleteCustom()">
+          <tui-icon icon="@tui.trash"></tui-icon>
+        </button>
+      </div>
     </div>
   </div>
 </div>

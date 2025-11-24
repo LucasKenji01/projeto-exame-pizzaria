@@ -14,6 +14,9 @@
             <a [routerLink]="['/orders']" class="dropdown-item">
               Meus pedidos
             </a>
+            <a (click)="onLogout($event)" class="dropdown-item logout-item">
+              Sair
+            </a>
           </ng-template>
         </ng-container>
 
@@ -68,7 +71,7 @@
 
     <tui-carousel [draggable]="true" [itemsCount]="3" [(index)]="index4">
       <ng-container *ngFor="let item of customPizzas; let i = index">
-        <app-card *tuiItem [title]="item.title" [description]="item.description" [imageUrl]="item.imageUrl" [price]="item.price" (addToCart)="onAddToCart($event)"></app-card>
+        <app-card *tuiItem [id]="item.id ?? 0" [title]="item.title" [description]="item.description" [imageUrl]="item.imageUrl" [logoOverlay]="getLogoOverlay(item)" [price]="item.price" [isCustom]="true" (addToCart)="onAddToCart($event)" (deleteCustom)="onDeleteCustom($event)"></app-card>
       </ng-container>
     </tui-carousel>
   </div>
@@ -77,8 +80,8 @@
     <h1 class="carousel-title">Mais pedidos</h1>
 
     <tui-carousel [draggable]="true" [itemsCount]="3" [(index)]="index1">
-      <ng-container *ngFor="let item of items1; let i = index">
-        <app-card *tuiItem [title]="item.title" [description]="item.description" [imageUrl]="item.imageUrl" [price]="item.price" (addToCart)="onAddToCart($event)"></app-card>
+      <ng-container *ngFor="let item of items3; let i = index">
+        <app-card *tuiItem [id]="item.id ?? 0" [title]="item.title" [description]="item.description" [imageUrl]="item.imageUrl" [logoOverlay]="getLogoOverlay(item)" [price]="item.price" (addToCart)="onAddToCart($event)"></app-card>
       </ng-container>
     </tui-carousel>
   </div>
@@ -88,7 +91,7 @@
 
     <tui-carousel [draggable]="true" [itemsCount]="3" [(index)]="index2">
       <ng-container *ngFor="let item of items2; let i = index">
-        <app-card *tuiItem [title]="item.title" [description]="item.description" [imageUrl]="item.imageUrl" [price]="item.price" (addToCart)="onAddToCart($event)"></app-card>
+        <app-card *tuiItem [id]="item.id ?? 0" [title]="item.title" [description]="item.description" [imageUrl]="item.imageUrl" [logoOverlay]="getLogoOverlay(item)" [price]="item.price" (addToCart)="onAddToCart($event)"></app-card>
       </ng-container>
     </tui-carousel>
   </div>
@@ -98,7 +101,7 @@
 
     <tui-carousel [draggable]="true" [itemsCount]="3" [(index)]="index3">
       <ng-container *ngFor="let item of items3; let i = index">
-        <app-card *tuiItem [title]="item.title" [description]="item.description" [imageUrl]="item.imageUrl" [price]="item.price" (addToCart)="onAddToCart($event)"></app-card>
+        <app-card *tuiItem [id]="item.id ?? 0" [title]="item.title" [description]="item.description" [imageUrl]="item.imageUrl" [logoOverlay]="getLogoOverlay(item)" [price]="item.price" (addToCart)="onAddToCart($event)"></app-card>
       </ng-container>
     </tui-carousel>
   </div>

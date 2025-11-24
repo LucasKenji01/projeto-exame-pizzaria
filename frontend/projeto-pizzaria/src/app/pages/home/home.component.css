@@ -43,6 +43,12 @@ ul {
   cursor: pointer;
 }
 
+.logout-item {
+  border-top: 1px solid #dcdcdc;
+  color: #d32f2f;
+  font-weight: 600;
+}
+
 a {
   color: #000000;
   font-size: 16px;

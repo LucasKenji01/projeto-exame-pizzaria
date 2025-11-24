@@ -11,6 +11,23 @@
   width: 100%;
 }
 
+.image-wrapper {
+  position: relative;
+}
+
+.logo-overlay {
+  position: absolute;
+  right: 8px;
+  bottom: 8px;
+  width: 48px;
+  height: 48px;
+  object-fit: contain;
+  background: rgba(255,255,255,0.8);
+  border-radius: 50%;
+  padding: 6px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+}
+
 .card-info {
   display: flex;
   flex-direction: column;
@@ -24,6 +41,14 @@ img {
   height: 200px;
   object-fit: cover;
   border-radius: 8px 8px 0 0;
+}
+
+/* Estilo aplicado apenas quando a imagem é o logo das pizzas criadas */
+.logo-image {
+  object-fit: contain;
+  height: 160px; /* reduz um pouco para caber melhor */
+  padding: 12px; /* espaço interno para não colar nas bordas */
+  background: transparent;
 }
 
 h1 {
@@ -49,4 +74,16 @@ p {
 .add-to-cart-btn {
   margin-top: auto;
   background-color: red;
+}
+
+.card-actions {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+
+.delete-custom-btn {
+  background-color: transparent;
+  color: #c62828;
+  border: 1px solid rgba(198,40,40,0.12);
 }
