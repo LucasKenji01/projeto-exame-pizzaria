@@ -22,7 +22,7 @@ export class CardComponent {
 
   @Output() deleteCustom = new EventEmitter<number>();
 
-  @Output() addToCart = new EventEmitter<{ id: number; title: string; description: string; price: number }>();
+  @Output() addToCart = new EventEmitter<{ id: number; title: string; description: string; price: number; isCustom?: boolean }>();
 
   getImageUrl(): string {
     return this.imageUrl || '/assets/pizza-padrao.jpg';
@@ -49,7 +49,8 @@ export class CardComponent {
       id: this.id,
       title: this.title,
       description: this.description,
-      price: this.price
+      price: this.price,
+      isCustom: this.isCustom
     });
   }
 

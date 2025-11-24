@@ -203,14 +203,18 @@ export class HomeComponent implements OnInit, OnDestroy {
     }, 0);
   }
 
-  onAddToCart(item: { id: number; title: string; description: string; price: number }) {
-    console.log('🛒 Adicionando item ao carrinho:', item.title, 'ID:', item.id);
+  onAddToCart(item: { id: number; title: string; description: string; price: number; isCustom?: boolean }) {
+    console.log('🛒 Adicionando item ao carrinho:', item.title, 'ID:', item.id, 'isCustom:', item.isCustom);
+
+    const payload: any = { quantidade: 1 };
+    if (item.isCustom) {
+      payload.produto_personalizado_id = item.id;
+    } else {
+      payload.produto_id = item.id;
+    }
 
     // Adicionar ao backend
-    this.carrinhoService.adicionarItem({
-      produto_id: item.id,
-      quantidade: 1
-    }).subscribe({
+    this.carrinhoService.adicionarItem(payload).subscribe({
       next: () => {
         console.log('✅ Item adicionado ao carrinho com sucesso');
         // Recarregar carrinho para atualizar view
