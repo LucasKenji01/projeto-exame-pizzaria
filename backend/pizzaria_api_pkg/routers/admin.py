@@ -25,6 +25,11 @@ class CupomInput(BaseModel):
     percentual_desconto: float
     validade: date
 
+
+class PromoverUsuarioInput(BaseModel):
+    usuario_id: int | None = None
+    email: str | None = None
+
 # ✅ CORREÇÃO: Usar os modelos corretos importados
 TABELAS = {
     "carrinho": Carrinho,
@@ -73,3 +78,27 @@ def metricas(usuario=Depends(role_required("admin")), db: Session = Depends(get_
         "total_usuarios": total_usuarios,
         "faturamento_total": total_faturado
     }
+
+
+@router.post('/usuarios/promover')
+def promover_usuario(dados: PromoverUsuarioInput, usuario=Depends(role_required("admin")), db: Session = Depends(get_db)):
+    """Promove um usuário a admin. Requer que quem chama seja admin.
+
+    Envia `usuario_id` ou `email` no corpo.
+    """
+    if not dados.usuario_id and not dados.email:
+        raise HTTPException(status_code=400, detail="Forneça 'usuario_id' ou 'email' para promover.")
+
+    query = db.query(Usuario)
+    if dados.usuario_id:
+        target = query.filter(Usuario.id == dados.usuario_id).first()
+    else:
+        target = query.filter(Usuario.email == dados.email).first()
+
+    if not target:
+        raise HTTPException(status_code=404, detail="Usuário não encontrado")
+
+    target.tipo_usuario = 'admin'
+    db.add(target)
+    db.commit()
+    return {"msg": "Usuário promovido a admin", "usuario_id": target.id, "email": target.email}

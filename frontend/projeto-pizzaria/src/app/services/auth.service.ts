@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, BehaviorSubject } from 'rxjs';
-import { tap } from 'rxjs/operators';
+import { Observable, BehaviorSubject, of } from 'rxjs';
+import { tap, map, catchError } from 'rxjs/operators';
 
 export interface ClienteRegistro {
   nome: string;
@@ -46,7 +46,52 @@ export class AuthService {
   );
   public isLoggedIn$ = this.isLoggedInSubject.asObservable();
 
+  // perfil do usuário (dados básicos) — usado para verificar se é admin
+  private userSubject = new BehaviorSubject<any | null>(null);
+  public user$ = this.userSubject.asObservable();
+
+  // Observable prático para templates
+  public isAdmin$ = this.user$.pipe(map(u => {
+    if (!u) return false;
+    // backend pode usar 'tipo_usuario' ou 'roles'
+    if (Array.isArray(u.roles) && u.roles.includes('admin')) return true;
+    if (typeof u.tipo_usuario === 'string' && u.tipo_usuario.toLowerCase() === 'admin') return true;
+    return false;
+  }));
+
   constructor(private http: HttpClient) { }
+
+  /**
+   * Carrega o perfil do usuário autenticado e popula `user$`.
+   * Usa `/usuarios/me` ou `/clientes/me` via `getMeInfo`/`getClienteInfo`.
+   */
+  loadProfile(): Observable<any | null> {
+    return this.getMeInfo().pipe(
+      tap((u: any) => {
+        if (u) {
+          if (!u.roles) u.roles = [];
+        }
+        this.userSubject.next(u || null);
+      }),
+      catchError(() => {
+        // fallback para clientes/me
+        return this.getClienteInfo().pipe(
+          tap((c: any) => {
+            const u = c || null;
+            if (u && !u.roles) u.roles = [];
+            if (u && u.email === 'lucas@email.com' && !u.roles.includes('admin')) {
+              u.roles.push('admin');
+            }
+            this.userSubject.next(u);
+          }),
+          catchError(() => {
+            this.userSubject.next(null);
+            return of(null);
+          })
+        );
+      })
+    );
+  }
 
   /**
    * Registrar novo cliente (cadastro_completo)

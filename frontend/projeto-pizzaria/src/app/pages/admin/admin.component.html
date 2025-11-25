@@ -1,0 +1,52 @@
+<header tuiNavigationHeader TuiTheme="light">
+  <button
+      tuiIconButton
+      type="button"
+      [routerLink]="'/home'"
+  >
+    <tui-icon icon="@tui.home"/>
+  </button>
+  <tui-avatar src="AI" />
+</header>
+<div [style.display]="'flex'">
+  <aside
+    tuiTheme="light"
+    [style.height.rem]="27"
+    [tuiNavigationAside]="expanded()"
+  >
+    <a
+        iconStart="@tui.layout-dashboard"
+        tuiAsideItem
+        routerLink="/admin/dashboard"
+    >
+        Dashboard
+    </a>
+    <a
+        iconStart="@tui.clipboard-list"
+        tuiAsideItem
+        routerLink="/admin/pedidos"
+    >
+        Pedidos
+    </a>
+    <a
+        iconStart="@tui.package"
+        tuiAsideItem
+        routerLink="/admin/produtos"
+    >
+        Produtos
+    </a>
+    <footer>
+        <button
+            tuiAsideItem
+            type="button"
+            [iconStart]="expanded() ? '@tui.chevron-left' : '@tui.chevron-right'"
+            (click)="handleToggle()"
+        >
+            {{ expanded() ? 'Fechar' : '' }}
+        </button>
+    </footer>
+  </aside>
+  <main tuiNavigationMain>
+      <router-outlet></router-outlet>
+  </main>
+</div>

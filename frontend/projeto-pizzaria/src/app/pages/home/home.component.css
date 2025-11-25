@@ -33,6 +33,10 @@ ul {
 .avatar-button {
   background-color: transparent;
 }
+.admin-badge {
+  background-color: red;
+  color: white !important;
+}
 
 .dropdown-item {
   display: flex;

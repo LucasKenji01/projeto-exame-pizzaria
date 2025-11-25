@@ -14,7 +14,7 @@ import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-home',
-  imports: [CommonModule, TuiPush, TuiButton, RouterLink, TuiCarousel, CardComponent, CartComponent, CreatePizzaComponent, TuiBadgedContentComponent, TuiBadgeNotification, TuiAvatar, TuiDropdown, NgFor],
+  imports: [CommonModule, TuiPush, TuiButton, RouterLink, TuiCarousel, CardComponent, CartComponent, CreatePizzaComponent, TuiBadgedContentComponent, TuiBadgeNotification, TuiAvatar, TuiDropdown, NgFor, TuiBadge],
   templateUrl: './home.component.html',
   styleUrl: './home.component.css'
 })
@@ -45,7 +45,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   allPizzas: { title: string; description: string; imageUrl: string; price: number }[] = [];
 
   constructor(
-    private authService: AuthService,
+    public authService: AuthService,
     private produtosService: ProdutosService,
     private carrinhoService: CarrinhoService,
     private pizzasService: PizzasService,
@@ -60,8 +60,17 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.authSubscription = this.authService.isLoggedIn$.subscribe(
       (isLoggedIn) => {
         this.logged = isLoggedIn;
+        // Quando o usuário logar, carregar o perfil para popular isAdmin$
+        if (isLoggedIn) {
+          this.authService.loadProfile().subscribe({ next: () => {}, error: () => {} });
+        }
       }
     );
+
+    // Se já estiver logado ao iniciar, garantir que o profile seja carregado
+    if (this.logged) {
+      this.authService.loadProfile().subscribe({ next: () => {}, error: () => {} });
+    }
 
     // Carregar produtos do banco de dados
     this.carregarProdutos();

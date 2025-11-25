@@ -1,0 +1,17 @@
+<section class="admin-page dashboard-page">
+  <h1>Dashboard</h1>
+
+  <div>
+    <h3>Vendas de Pizzas em cada mês</h3>
+    <tui-axes
+      class="axes"
+      [axisXLabels]="labelsX"
+      [axisYLabels]="labelsY"
+      >
+      <tui-bar-chart
+      [max]="chartMax"
+      [value]="value"
+      />
+    </tui-axes>
+  </div>
+</section>

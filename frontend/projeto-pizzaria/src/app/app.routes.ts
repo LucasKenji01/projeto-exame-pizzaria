@@ -5,6 +5,11 @@ import { RegisterComponent } from './pages/register/register.component';
 import { CreatePizzaComponent } from './pages/create-pizza/create-pizza.component';
 import { OrdersComponent } from './pages/orders/orders.component';
 import { AccountComponent } from './pages/account/account.component';
+import { AdminComponent } from './pages/admin/admin.component';
+import { AdminGuard } from './guards/admin.guard';
+import { AdminDashboardComponent } from './pages/admin/dashboard/dashboard.component';
+import { AdminPedidosComponent } from './pages/admin/pedidos/pedidos.component';
+import { AdminProdutosComponent } from './pages/admin/produtos/produtos.component';
 
 export const routes: Routes = [
   {
@@ -27,6 +32,17 @@ export const routes: Routes = [
   {
     path: 'create-pizza',
     component: CreatePizzaComponent
+  },
+  {
+    path: 'admin',
+    component: AdminComponent,
+    canActivate: [AdminGuard],
+    children: [
+      { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
+      { path: 'dashboard', component: AdminDashboardComponent },
+      { path: 'pedidos', component: AdminPedidosComponent },
+      { path: 'produtos', component: AdminProdutosComponent },
+    ]
   },
   {
     path: 'orders',

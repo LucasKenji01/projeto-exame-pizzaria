@@ -1,0 +1,13 @@
+:host {
+  --tui-theme-color: #dcdcdc;
+}
+
+header {
+  display: flex;
+  justify-content: space-between;
+}
+
+aside {
+  height: 94.7vh !important;
+}
+
