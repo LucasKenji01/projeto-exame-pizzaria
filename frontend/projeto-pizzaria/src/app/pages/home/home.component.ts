@@ -62,14 +62,14 @@ export class HomeComponent implements OnInit, OnDestroy {
         this.logged = isLoggedIn;
         // Quando o usuário logar, carregar o perfil para popular isAdmin$
         if (isLoggedIn) {
-          this.authService.loadProfile().subscribe({ next: () => {}, error: () => {} });
+          this.authService.loadProfile().subscribe({ next: () => { }, error: () => { } });
         }
       }
     );
 
     // Se já estiver logado ao iniciar, garantir que o profile seja carregado
     if (this.logged) {
-      this.authService.loadProfile().subscribe({ next: () => {}, error: () => {} });
+      this.authService.loadProfile().subscribe({ next: () => { }, error: () => { } });
     }
 
     // Carregar produtos do banco de dados

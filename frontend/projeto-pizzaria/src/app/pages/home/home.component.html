@@ -6,7 +6,7 @@
         <ng-container *ngIf="logged; else notlogged">
           <tui-badge *ngIf="authService.isAdmin$ | async" class="admin-badge">Admin</tui-badge>
           <button tuiButton tuiDropdownOpen type="button" [tuiDropdown]="dropdown" class="avatar-button">
-              <tui-avatar size="m" src="@tui.user"></tui-avatar>
+            <tui-avatar size="m" src="@tui.user"></tui-avatar>
           </button>
           <ng-template #dropdown>
             <a [routerLink]="['/account']" class="dropdown-item">

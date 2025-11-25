@@ -6,7 +6,7 @@ import { AuthService } from '../services/auth.service';
 
 @Injectable({ providedIn: 'root' })
 export class AdminGuard implements CanActivate {
-  constructor(private auth: AuthService, private router: Router) {}
+  constructor(private auth: AuthService, private router: Router) { }
 
   canActivate(): Observable<boolean | UrlTree> {
     return this.auth.isAdmin$.pipe(map(isAdmin => {
